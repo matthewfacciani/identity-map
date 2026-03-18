@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Identity Map</title>
+<style>/* system fonts */</style>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #f7f4ef;
+  --paper: #fffdf9;
+  --ink: #1c1917;
+  --ink-mid: #57534e;
+  --ink-light: #a8a29e;
+  --rule: #e7e2db;
+  --platform-color: #334155;
+}
+body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; }
+.wrap { max-width: 720px; margin: 0 auto; padding: 44px 28px 72px; }
+@media (max-width: 600px) {
+  .wrap { padding: 24px 16px 80px; }
+  .ws-title { font-size: 26px; }
+  .ws-desc { font-size: 14px; }
+  .step-lbl { display: none; }
+  .step-lbl.active { display: block; font-size: 10px; }
+  .step-line { min-width: 8px; }
+  .section-title { font-size: 17px; }
+  .chips { gap: 6px; }
+  .chip { font-size: 12px; padding: 6px 11px; }
+  .importance-row { flex-wrap: wrap; gap: 8px; }
+  .imp-btn { width: 38px; height: 32px; }
+  .btn-row { flex-direction: column; }
+  .btn-row .btn { width: 100%; text-align: center; box-sizing: border-box; }
+  .meters { grid-template-columns: 1fr; }
+  .score-card { grid-template-columns: auto 1fr; gap: 14px; padding: 16px; }
+  .score-big { font-size: 42px; }
+  .map-hint-mobile { display: flex !important; }
+  .canvas-alt-panel { display: block !important; }
+  .canvas-wrap { display: none; }
+  .map-legend { display: none; }
+}
+.ws-eyebrow { font-size: 10px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-light); margin-bottom: 10px; }
+.ws-title { font-family: Georgia, serif; font-size: 34px; line-height: 1.15; color: var(--ink); margin-bottom: 10px; }
+.ws-title em { font-style: italic; color: var(--ink-mid); }
+.ws-desc { font-size: 15px; font-weight: 300; color: var(--ink-mid); line-height: 1.7; max-width: 560px; }
+.header-rule { border: none; border-top: 1.5px solid var(--ink); margin: 18px 0 32px; }
+.step-bar { display: flex; align-items: center; gap: 0; margin-bottom: 32px; }
+.step-item { display: flex; align-items: center; gap: 8px; }
+.step-num { width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid var(--rule); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: var(--ink-light); background: var(--paper); flex-shrink: 0; transition: all 0.3s; }
+.step-num.active { border-color: var(--ink); background: var(--ink); color: white; }
+.step-num.done { border-color: var(--ink-mid); background: var(--ink-mid); color: white; }
+.step-lbl { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-light); white-space: nowrap; }
+.step-lbl.active { color: var(--ink); }
+.step-line { flex: 1; height: 1px; background: var(--rule); margin: 0 10px; }
+.panel { display: none; }
+.panel.active { display: block; animation: rise 0.35s ease both; }
+@keyframes rise { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+.section-title { font-family: Georgia, serif; font-size: 20px; margin-bottom: 6px; }
+.section-body { font-size: 14px; font-weight: 300; color: var(--ink-mid); line-height: 1.7; margin-bottom: 22px; }
+.hint-box { font-size: 13px; color: var(--ink-mid); font-style: italic; background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 10px 14px; margin-bottom: 20px; line-height: 1.6; }
+.cat-block { margin-bottom: 20px; }
+.cat-label { font-size: 10px; font-weight: 600; letter-spacing: 0.13em; text-transform: uppercase; color: var(--ink-light); border-bottom: 1px solid var(--rule); padding-bottom: 7px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.cat-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { padding: 7px 14px; border-radius: 100px; border: 1.5px solid var(--rule); background: var(--paper); font-size: 13px; color: var(--ink-mid); cursor: pointer; transition: all 0.18s; user-select: none; }
+.chip:hover { border-color: var(--ink-mid); color: var(--ink); }
+.chip.sel { color: white; border-color: transparent; }
+.chip.platform-chip { border-style: dashed; }
+.chip.platform-chip.sel { background: var(--platform-color) !important; border-style: solid; }
+.custom-row { display: flex; gap: 8px; margin-top: 10px; }
+.custom-input { flex: 1; padding: 8px 14px; border: 1.5px solid var(--rule); border-radius: 100px; background: var(--paper); font-family: system-ui, sans-serif; font-size: 13px; color: var(--ink); outline: none; }
+.custom-input:focus { border-color: var(--ink-mid); }
+.custom-input::placeholder { color: var(--ink-light); }
+.custom-add { padding: 8px 14px; border-radius: 100px; border: 1.5px solid var(--rule); background: var(--paper); font-size: 13px; font-weight: 500; color: var(--ink-mid); cursor: pointer; }
+.custom-add:hover { border-color: var(--ink); color: var(--ink); }
+.tally-bar { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--paper); border: 1px solid var(--rule); border-radius: 8px; margin: 18px 0 6px; }
+.tally-txt { font-size: 13px; color: var(--ink-mid); }
+.tally-num { font-family: Georgia, serif; font-size: 22px; }
+.btn { display: inline-block; padding: 12px 26px; font-family: system-ui, sans-serif; font-size: 14px; font-weight: 600; border-radius: 6px; border: none; cursor: pointer; transition: all 0.2s; }
+.btn-dark { background: var(--ink); color: var(--bg); }
+.btn-dark:hover { background: #2c2825; }
+.btn-dark:disabled { background: var(--rule); color: var(--ink-light); cursor: not-allowed; }
+.btn-ghost { background: transparent; border: 1.5px solid var(--rule); color: var(--ink-mid); }
+.btn-ghost:hover { border-color: var(--ink-mid); color: var(--ink); }
+.btn-row { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
+.importance-row { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--rule); }
+.importance-row:last-child { border-bottom: none; }
+.importance-identity { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
+.importance-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.importance-label { font-size: 14px; font-weight: 500; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.importance-btns { display: flex; gap: 6px; flex-shrink: 0; }
+.imp-btn { width: 42px; height: 34px; border-radius: 6px; border: 1.5px solid var(--rule); background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+.imp-btn.sel { color: white; border-color: transparent; }
+.imp-btn .circle-s { width: 10px; height: 10px; border-radius: 50%; background: currentColor; display: block; }
+.imp-btn .circle-m { width: 16px; height: 16px; border-radius: 50%; background: currentColor; display: block; }
+.imp-btn .circle-l { width: 22px; height: 22px; border-radius: 50%; background: currentColor; display: block; }
+.platform-card { border: 1.5px solid var(--rule); border-radius: 10px; background: var(--paper); margin-bottom: 14px; overflow: hidden; transition: border-color 0.2s; }
+.platform-card.complete { border-color: var(--platform-color); }
+.pc-header { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: white; cursor: pointer; user-select: none; }
+.pc-icon { font-size: 18px; width: 28px; text-align: center; }
+.pc-name { font-size: 15px; font-weight: 600; flex: 1; }
+.pc-status { font-size: 12px; color: var(--ink-light); font-style: italic; }
+.pc-status.done { color: var(--platform-color); font-style: normal; font-weight: 500; }
+.pc-body { padding: 0 16px 16px; display: none; }
+.pc-body.open { display: block; }
+.pc-q { font-size: 13px; color: var(--ink-mid); margin: 12px 0 10px; line-height: 1.6; }
+.pc-q strong { color: var(--ink); }
+.id-toggle-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.id-toggle { padding: 6px 13px; border-radius: 100px; border: 1.5px solid var(--rule); background: white; font-size: 12px; color: var(--ink-mid); cursor: pointer; transition: all 0.18s; }
+.id-toggle:hover { border-color: var(--ink-mid); }
+.id-toggle.sel { color: white; border-color: transparent; }
+.strength-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.strength-lbl { font-size: 12px; color: var(--ink-light); white-space: nowrap; }
+.strength-options { display: flex; gap: 6px; }
+.strength-btn { padding: 5px 12px; border-radius: 100px; border: 1.5px solid var(--rule); background: white; font-size: 12px; color: var(--ink-mid); cursor: pointer; transition: all 0.15s; }
+.strength-btn:hover { border-color: var(--ink-mid); }
+.strength-btn.sel { background: var(--ink); color: white; border-color: var(--ink); }
+.canvas-wrap { position: relative; border: 1.5px solid var(--rule); border-radius: 12px; background: var(--paper); overflow: hidden; margin-bottom: 14px; }
+canvas#mapCanvas { display: block; width: 100%; }
+.map-legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+.legend-item { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--ink-mid); }
+.legend-swatch { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+.legend-swatch.platform-sq { border-radius: 3px; background: var(--platform-color); }
+.overlap-card { border: 1px solid var(--rule); border-radius: 8px; padding: 16px 18px; background: var(--paper); margin-bottom: 18px; }
+.overlap-card-title { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-light); margin-bottom: 14px; }
+.meters { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.meter-name { font-size: 12px; color: var(--ink-mid); margin-bottom: 5px; font-weight: 500; }
+.meter-bg { height: 5px; background: var(--bg); border-radius: 3px; overflow: hidden; margin-bottom: 4px; }
+.meter-fill { height: 100%; border-radius: 3px; transition: width 0.6s cubic-bezier(0.4,0,0.2,1), background 0.4s; }
+.meter-val { font-size: 11px; color: var(--ink-light); font-style: italic; }
+.score-card { display: grid; grid-template-columns: auto 1fr; gap: 20px; align-items: start; padding: 22px; border: 1.5px solid var(--rule); border-radius: 10px; background: var(--paper); margin-bottom: 20px; }
+.score-big { font-family: Georgia, serif; font-size: 56px; line-height: 1; }
+.score-meta-lbl { font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-light); margin-bottom: 4px; }
+.score-level { font-family: Georgia, serif; font-size: 20px; margin-bottom: 8px; }
+.score-desc { font-size: 14px; line-height: 1.6; color: var(--ink-mid); }
+.amplifier-callout { border: 1px dashed var(--rule); border-radius: 8px; padding: 16px 18px; background: var(--paper); margin-bottom: 20px; }
+.amp-label { font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-light); margin-bottom: 12px; }
+.amp-row { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--rule); font-size: 13px; }
+.amp-row:last-of-type { border-bottom: none; }
+.amp-platform { font-weight: 600; min-width: 110px; color: var(--ink); }
+.amp-arrow { color: var(--ink-light); }
+.amp-targets { color: var(--ink-mid); line-height: 1.5; flex: 1; }
+.amp-strength { font-size: 11px; padding: 2px 8px; border-radius: 10px; background: var(--bg); color: var(--ink-light); margin-left: 8px; white-space: nowrap; display: inline-block; }
+.top-amplified { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--rule); font-size: 13px; color: var(--ink-mid); line-height: 1.6; }
+.research-callout { padding: 18px 20px; border-left: 3px solid var(--ink); background: #f0ece4; border-radius: 0 8px 8px 0; margin-bottom: 22px; }
+.rc-eyebrow { font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-light); margin-bottom: 6px; }
+.rc-text { font-size: 14px; line-height: 1.7; color: var(--ink-mid); }
+.rc-text strong { color: var(--ink); }
+.reflect-qs { margin-bottom: 20px; }
+.rq { padding: 14px 0; border-bottom: 1px solid var(--rule); }
+.rq:last-child { border-bottom: none; }
+.rq-q { font-size: 14px; font-weight: 500; margin-bottom: 8px; }
+.rq-input { width: 100%; padding: 10px 14px; border: 1.5px solid var(--rule); border-radius: 6px; background: var(--bg); font-family: system-ui, sans-serif; font-size: 13px; color: var(--ink); resize: none; min-height: 60px; outline: none; line-height: 1.5; }
+.rq-input:focus { border-color: var(--ink-mid); background: var(--paper); }
+.rq-input::placeholder { color: var(--ink-light); font-style: italic; }
+.restart-row { margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--rule); display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.restart-note { font-size: 12px; font-style: italic; color: var(--ink-light); }
+.btn-share { background: #1d9bf0; color: white; border: none; }
+.btn-share:hover { background: #1a8cd8; }
+.site-footer { max-width: 720px; margin: 0 auto; padding: 20px 28px 48px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; border-top: 1px solid var(--rule); }
+.footer-credit { font-size: 12px; color: var(--ink-light); line-height: 1.6; }
+.footer-credit a { color: var(--ink-mid); text-decoration: none; border-bottom: 1px solid var(--rule); }
+.footer-credit a:hover { color: var(--ink); border-color: var(--ink-mid); }
+.footer-links { display: flex; gap: 16px; flex-wrap: wrap; }
+.footer-link { font-size: 12px; font-weight: 500; color: var(--ink-mid); text-decoration: none; border-bottom: 1px solid var(--rule); }
+.footer-link:hover { color: var(--ink); border-color: var(--ink); }
+.canvas-alt-panel { display: none; background: var(--paper); border: 1.5px solid var(--rule); border-radius: 12px; padding: 20px; margin-bottom: 14px; }
+.canvas-alt-title { font-family: Georgia, serif; font-size: 16px; margin-bottom: 14px; color: var(--ink); }
+.canvas-alt-identity { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--rule); flex-wrap: wrap; }
+.canvas-alt-identity:last-child { border-bottom: none; }
+.canvas-alt-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+.canvas-alt-name { font-size: 14px; font-weight: 500; flex: 1; min-width: 80px; }
+.canvas-overlap-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+.cob { padding: 5px 10px; border-radius: 6px; border: 1.5px solid var(--rule); background: white; font-size: 11px; font-weight: 600; color: var(--ink-light); cursor: pointer; transition: all 0.15s; }
+.cob:hover { border-color: var(--ink-mid); color: var(--ink); }
+.cob.sel { background: var(--ink); color: white; border-color: var(--ink); }
+.map-hint-mobile { display: none; align-items: flex-start; gap: 10px; background: #f0ece4; border-radius: 8px; padding: 12px 14px; margin-bottom: 14px; font-size: 13px; color: var(--ink-mid); line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="ws-eyebrow">Interactive Worksheet</div>
+<h1 class="ws-title">Your <em>Identity Map</em></h1>
+<hr class="header-rule">
+<p class="ws-desc">What makes you <em>you</em>? The groups you belong to, the roles you play, the values you hold: these identities shape what you believe and who you trust. They also shape your biases. Social media algorithms are designed to amplify certain identities over others, quietly narrowing what feels true. This exercise makes that structure visible — so you can recognize your biases, become more resilient to misinformation, and engage more thoughtfully in our information ecosystem.</p>
+<div style="margin-top:14px;padding:12px 16px;border:1px solid var(--rule);border-radius:6px;background:var(--paper);font-size:12px;color:var(--ink-light);line-height:1.6;">
+  <strong style="color:var(--ink-mid)">For reflection and educational purposes only.</strong> The percentages and scores in your results are rough estimates meant to help you visualize how your identities interact — not precise measurements. Think of your identity map as a mirror, not a diagnostic tool.
+</div>
+<div style="height:28px"></div>
+
+<div class="step-bar">
+  <div class="step-item"><div class="step-num active" id="sn1">1</div><span class="step-lbl active" id="sl1">Identities</span></div>
+  <div class="step-line"></div>
+  <div class="step-item"><div class="step-num" id="sn2">2</div><span class="step-lbl" id="sl2">Importance</span></div>
+  <div class="step-line"></div>
+  <div class="step-item"><div class="step-num" id="sn3">3</div><span class="step-lbl" id="sl3">Your Feeds</span></div>
+  <div class="step-line"></div>
+  <div class="step-item"><div class="step-num" id="sn4">4</div><span class="step-lbl" id="sl4">The Map</span></div>
+  <div class="step-line"></div>
+  <div class="step-item"><div class="step-num" id="sn5">5</div><span class="step-lbl" id="sl5">Reflect</span></div>
+</div>
+
+<!-- PANEL 1 -->
+<div class="panel active" id="panel1">
+  <div class="section-title">Which groups do you belong to?</div>
+  <p class="section-body">We all identify with certain groups — political, professional, religious, geographical, interest-based. Which ones feel true to you? Select at least three from the categories below, or add your own. Focus on identities that feel genuinely important to you — ones that shape how you see the world.</p>
+  <div id="id-categories"></div>
+  <div class="tally-bar">
+    <span class="tally-txt">Identities selected</span>
+    <span class="tally-num" id="id-tally">0</span>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-dark" id="to-p2" disabled>Next: Rate Importance →</button>
+  </div>
+</div>
+
+<!-- PANEL 2 -->
+<div class="panel" id="panel2">
+  <div class="section-title">How important is each identity to you?</div>
+  <p class="section-body">Now, rate how important each identity is to you: how central does it feel to your sense of self? Your answers will determine how large each identity appears on your map — larger circles mean that identity matters more to you.</p>
+  <div class="hint-box">💡 Think about which identities you'd feel most lost without. Some may matter but feel more situational — save the largest circle for identities that genuinely define you.</div>
+  <div id="importance-list"></div>
+  <div class="btn-row">
+    <button class="btn btn-ghost" onclick="goTo(1)">← Back</button>
+    <button class="btn btn-dark" onclick="goTo(3)">Next: Your Feeds →</button>
+  </div>
+</div>
+
+<!-- PANEL 3 -->
+<div class="panel" id="panel3">
+  <div class="section-title">Which social media platforms do you use?</div>
+  <p class="section-body">After you select a platform, click or tap it to choose which identities appear most on that feed — and how strongly it amplifies them.</p>
+  <div class="hint-box">💡 Think about not only the people and pages you follow, but also what the algorithms add to your feed.</div>
+  <div id="platform-area"></div>
+  <div class="btn-row">
+    <button class="btn btn-ghost" onclick="goTo(2)">← Back</button>
+    <button class="btn btn-dark" id="to-p4" disabled>Next: See the Map →</button>
+  </div>
+</div>
+
+<!-- PANEL 4 -->
+<div class="panel" id="panel4">
+  <div class="section-title">Your Identity Map</div>
+  <p class="section-body">Drag the circles to show how much your identities overlap in real life. The more two identities share communities, values, and information sources, the more you should overlap them.</p>
+
+  <div class="map-hint-mobile">
+    <span style="font-size:18px">👆</span>
+    <span>Use the <strong>overlap ratings below</strong> to set how much your identities overlap in real life.</span>
+  </div>
+
+  <div class="canvas-wrap"><canvas id="mapCanvas" height="520"></canvas></div>
+  <div class="map-legend" id="map-legend"></div>
+
+  <div class="canvas-alt-panel" id="canvas-alt-panel">
+    <div class="canvas-alt-title">How much do your identities overlap?</div>
+    <p style="font-size:13px;color:var(--ink-mid);margin-bottom:14px;line-height:1.6;">Use the buttons below to rate how much each identity overlaps with your others. Think about shared communities, values, and information sources — the more two identities have in common, the higher the overlap.</p>
+    <div id="canvas-alt-list"></div>
+  </div>
+
+  <div class="overlap-card">
+    <div class="overlap-card-title">Complexity Indicators</div>
+    <div class="meters">
+      <div>
+        <div class="meter-name">Total Overlap</div>
+        <div class="meter-bg"><div class="meter-fill" id="id-overlap-fill" style="width:0%"></div></div>
+        <div class="meter-val" id="id-overlap-lbl">Drag circles or rate below</div>
+      </div>
+      <div>
+        <div class="meter-name">Feed Amplification</div>
+        <div class="meter-bg"><div class="meter-fill" id="feed-conc-fill" style="width:0%"></div></div>
+        <div class="meter-val" id="feed-conc-lbl">Based on your connections</div>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:11px;color:var(--ink-light);font-style:italic;margin-bottom:18px;">Percentages are estimates for reflection only.</p>
+  <div class="btn-row">
+    <button class="btn btn-ghost" onclick="goTo(3)">← Back</button>
+    <button class="btn btn-dark" onclick="goTo(5)">Reflect on My Map →</button>
+  </div>
+</div>
+
+<!-- PANEL 5 -->
+<div class="panel" id="panel5">
+  <div class="section-title">What your map reveals</div>
+  <div id="reflect-score"></div>
+  <div class="amplifier-callout" id="amplifier-callout"></div>
+  <div class="research-callout">
+    <div class="rc-eyebrow">Evidence-Based Insights — Roccas &amp; Brewer (2002)</div>
+    <p class="rc-text">This exercise is grounded in research on social identity complexity — the degree to which your group memberships overlap. When your identities cluster together, sharing the same communities, values, and information sources, your identity map is less complex. When they are more distinct, your map is more complex. Research suggests that people with more complex identity maps tend to show greater tolerance toward outgroups and reduced ingroup bias. This exercise applies that insight to how we consume information — the more our identities cluster together, the more we may unconsciously favor information that confirms them.<br><br>Social media adds another layer: algorithms <strong>actively amplify certain identities</strong>, quietly shaping which version of you gets reinforced online. Your susceptibility to misinformation isn't only about who you are — it's about which version of yourself your feeds constantly reflect back to you.</p>
+  </div>
+  <div id="reflect-qs"></div>
+  <div class="restart-row">
+    <button class="btn btn-dark" onclick="exportReflections()">📋 Copy My Responses</button>
+    <button class="btn btn-share btn" onclick="shareScore()">🔗 Share My Score</button>
+    <button class="btn btn-ghost" onclick="goTo(4)">← Back to Map</button>
+    <button class="btn btn-ghost" onclick="restart()">↺ Start Over</button>
+    <span class="restart-note">Try different identities or platforms to see how the map changes.</span>
+  </div>
+</div>
+
+</div>
+
+<div class="site-footer">
+  <div class="footer-credit">
+    Created by <a href="https://www.matthewfacciani.com" target="_blank">Matthew Facciani, PhD</a>
+  </div>
+  <div class="footer-links">
+    <a class="footer-link" href="https://matthewfacciani.substack.com" target="_blank">📬 Misguided the Newsletter</a>
+    <a class="footer-link" href="https://cup.columbia.edu/book/misguided/9780231205054" target="_blank">📖 Learn more in my book</a>
+  </div>
+</div>
+<script>
+const IDENTITY_CATS = [
+  { name: 'Politics', color: '#c2410c', items: ['Progressive', 'Liberal', 'Conservative', 'Libertarian', 'Independent', 'Activist', 'Politically disengaged']},
+  { name: 'Religion & Worldview', color: '#0369a1', items: ['Evangelical Christian', 'Catholic', 'Protestant', 'Jewish', 'Muslim', 'Hindu', 'Buddhist', 'Spiritual but not religious', 'Atheist / agnostic']},
+  { name: 'Where I Live', color: '#15803d', items: ['Rural', 'Small town', 'Suburban', 'Urban', 'South', 'Midwest', 'Northeast', 'West Coast', 'Immigrant / newcomer', 'Military community']},
+  { name: 'Health & Wellness', color: '#7c3aed', items: ['Fitness enthusiast', 'Recreational sports', 'Clean eating / natural foods', 'Holistic health advocate', 'Wellness community', 'Public health supporter']},
+  { name: 'Work & Role', color: '#b45309', items: ['Healthcare worker', 'Teacher / educator', 'Scientist / researcher', 'Journalist / media', 'Tradesperson', 'Military / law enforcement', 'Business owner', 'Student', 'Stay-at-home parent', 'Retired']},
+  { name: 'Family', color: '#be185d', items: ['Parent', 'Grandparent', 'Caregiver', 'Homeschool family', 'Traditional family values', 'Multigenerational household', 'Military family', 'Single parent', 'Childfree']},
+  { name: 'How I Think', color: '#0891b2', items: ['Contrarian', 'Skeptic', 'Idealist', 'Pragmatist', 'Traditionalist', 'Systems thinker']},
+  { name: 'Interests & Community', color: '#65a30d', items: ['Gun owner', 'Environmentalist', 'Finance community', 'Self-reliance community', 'LGBTQ+ community', 'Sports fan', 'Gamer', 'True crime follower', 'Diet / nutrition community', 'Self-improvement', 'Faith community member', 'Neighborhood organizer']},
+];
+
+const PLATFORMS = [
+  { id:'twitter', name:'Twitter / X', icon:'𝕏' },
+  { id:'threads', name:'Threads', icon:'🧵' },
+  { id:'instagram', name:'Instagram', icon:'📷' },
+  { id:'tiktok', name:'TikTok', icon:'🎵' },
+  { id:'facebook', name:'Facebook', icon:'📘' },
+  { id:'reddit', name:'Reddit', icon:'🟠' },
+  { id:'youtube', name:'YouTube', icon:'▶' },
+  { id:'podcasts', name:'Podcasts', icon:'🎙' },
+  { id:'substack', name:'Newsletters', icon:'📩' },
+  { id:'discord', name:'Discord', icon:'💬' },
+  { id:'linkedin', name:'LinkedIn', icon:'💼' },
+  { id:'cablenews', name:'Cable News / TV', icon:'📺' },
+];
+
+let selectedIdentities = [], identityImportance = {}, selectedPlatforms = [], platformConnections = {};
+let identityNodes = [], platformNodes = [], dragging = null, dragOffX = 0, dragOffY = 0;
+let canvasW = 0, canvasH = 520, animFrame = null, overlapPct = 0, feedConcPct = 0;
+let mobileOverlap = {};
+
+function isMobile() { return window.innerWidth <= 600 || ('ontouchstart' in window && window.innerWidth <= 900); }
+
+function buildPanel1() {
+  const container = document.getElementById('id-categories');
+  container.innerHTML = '';
+  IDENTITY_CATS.forEach(cat => {
+    const block = document.createElement('div');
+    block.className = 'cat-block';
+    block.innerHTML = `<div class="cat-label"><div class="cat-dot" style="background:${cat.color}"></div>${cat.name}</div><div class="chips" id="chips_${cat.name.replace(/\W/g,'_')}"></div>`;
+    const chipsDiv = block.querySelector('.chips');
+    cat.items.forEach(item => {
+      const c = createChip(item, cat.color, false, () => toggleIdentity(item, cat.color, c));
+      chipsDiv.appendChild(c);
+    });
+    const row = document.createElement('div');
+    row.className = 'custom-row';
+    const inp = document.createElement('input');
+    inp.className = 'custom-input'; inp.placeholder = 'Add your own…';
+    const addBtn = document.createElement('button');
+    addBtn.className = 'custom-add'; addBtn.textContent = '+ Add';
+    addBtn.onclick = () => {
+      const v = inp.value.trim(); if (!v) return;
+      const c2 = createChip(v, cat.color, true, () => toggleIdentity(v, cat.color, c2));
+      chipsDiv.appendChild(c2);
+      if (!selectedIdentities.find(x => x.label === v)) toggleIdentity(v, cat.color, c2);
+      inp.value = '';
+    };
+    inp.onkeydown = e => { if (e.key === 'Enter') addBtn.click(); };
+    row.append(inp, addBtn);
+    block.appendChild(row);
+    container.appendChild(block);
+  });
+}
+
+function createChip(label, color, presel, onClick) {
+  const c = document.createElement('button');
+  c.className = 'chip' + (presel ? ' sel' : '');
+  c.textContent = label;
+  if (presel) c.style.background = color;
+  c.onclick = onClick;
+  return c;
+}
+
+function toggleIdentity(label, color, chip) {
+  const idx = selectedIdentities.findIndex(x => x.label === label);
+  if (idx >= 0) { selectedIdentities.splice(idx, 1); chip.classList.remove('sel'); chip.style.background = ''; }
+  else { selectedIdentities.push({ label, color }); chip.classList.add('sel'); chip.style.background = color; }
+  updateIdTally();
+}
+
+function updateIdTally() {
+  document.getElementById('id-tally').textContent = selectedIdentities.length;
+  document.getElementById('to-p2').disabled = selectedIdentities.length < 2;
+}
+
+function buildImportancePanel() {
+  const list = document.getElementById('importance-list');
+  list.innerHTML = '';
+  selectedIdentities.forEach(id => {
+    if (!identityImportance[id.label]) identityImportance[id.label] = 'medium';
+    const cur = identityImportance[id.label];
+    const row = document.createElement('div');
+    row.className = 'importance-row';
+    row.innerHTML = `
+      <div class="importance-identity"><div class="importance-dot" style="background:${id.color}"></div><span class="importance-label">${id.label}</span></div>
+      <div class="importance-btns">
+        <button class="imp-btn${cur==='low'?' sel':''}" style="${cur==='low'?'background:'+id.color:'color:'+id.color}" title="Low" onclick="setImportance('${id.label}','low','${id.color}',this)"><span class="circle-s" style="background:${cur==='low'?'white':id.color}"></span></button>
+        <button class="imp-btn${cur==='medium'?' sel':''}" style="${cur==='medium'?'background:'+id.color:'color:'+id.color}" title="Medium" onclick="setImportance('${id.label}','medium','${id.color}',this)"><span class="circle-m" style="background:${cur==='medium'?'white':id.color}"></span></button>
+        <button class="imp-btn${cur==='high'?' sel':''}" style="${cur==='high'?'background:'+id.color:'color:'+id.color}" title="High" onclick="setImportance('${id.label}','high','${id.color}',this)"><span class="circle-l" style="background:${cur==='high'?'white':id.color}"></span></button>
+      </div>`;
+    list.appendChild(row);
+  });
+}
+
+function setImportance(label, level, color, btn) {
+  identityImportance[label] = level;
+  const row = btn.closest('.importance-row');
+  row.querySelectorAll('.imp-btn').forEach(b => { b.classList.remove('sel'); b.style.background = ''; b.querySelector('span').style.background = color; });
+  btn.classList.add('sel'); btn.style.background = color; btn.querySelector('span').style.background = 'white';
+}
+
+function buildPanel3() {
+  const area = document.getElementById('platform-area');
+  area.innerHTML = '';
+  const block = document.createElement('div');
+  block.className = 'cat-block';
+  block.innerHTML = `<div class="cat-label">Select your platforms</div><div class="chips" id="platform-chips"></div>`;
+  area.appendChild(block);
+  const pChips = block.querySelector('#platform-chips');
+  PLATFORMS.forEach(p => {
+    const c = document.createElement('button');
+    c.className = 'chip platform-chip' + (selectedPlatforms.includes(p.id) ? ' sel' : '');
+    c.textContent = p.icon + ' ' + p.name;
+    c.dataset.pid = p.id;
+    c.onclick = () => {
+      if (selectedPlatforms.includes(p.id)) {
+        selectedPlatforms = selectedPlatforms.filter(x => x !== p.id);
+        c.classList.remove('sel'); c.style.background = '';
+        const card = document.getElementById('pcard-' + p.id);
+        if (card) card.remove();
+      } else {
+        selectedPlatforms.push(p.id);
+        c.classList.add('sel');
+        if (!platformConnections[p.id]) platformConnections[p.id] = { targets: [], strength: 'moderate' };
+        renderPlatformCard(p, area);
+      }
+      updateP3Btn();
+    };
+    pChips.appendChild(c);
+  });
+  selectedPlatforms.forEach(pid => {
+    const p = PLATFORMS.find(x => x.id === pid);
+    if (p && !document.getElementById('pcard-' + pid)) renderPlatformCard(p, area);
+  });
+  updateP3Btn();
+}
+
+function renderPlatformCard(p, container) {
+  const conn = platformConnections[p.id];
+  const card = document.createElement('div');
+  card.className = 'platform-card' + (conn.targets.length > 0 ? ' complete' : '');
+  card.id = 'pcard-' + p.id;
+  const isNone = conn.targets.length === 0 && conn.markedNone;
+  const noneBtn = `<button class="id-toggle none-toggle${isNone?' sel':''}" data-pid="${p.id}" style="${isNone?'background:#64748b;color:white;border-color:transparent':''}" onclick="markNone('${p.id}',this)">None</button>`;
+  const togglesHtml = noneBtn + selectedIdentities.map(id => {
+    const sel = conn.targets.includes(id.label);
+    return `<button class="id-toggle${sel?' sel':''}" data-pid="${p.id}" data-label="${id.label}" style="${sel?`background:${id.color};color:white;border-color:transparent`:''}" onclick="toggleTarget('${p.id}','${id.label}','${id.color}',this)">${id.label}</button>`;
+  }).join('');
+  const mkStrBtn = (s) => `<button class="strength-btn${conn.strength===s?' sel':''}" onclick="setStrength('${p.id}','${s}',this)">${s.charAt(0).toUpperCase()+s.slice(1)}</button>`;
+  card.innerHTML = `
+    <div class="pc-header" onclick="toggleCard('${p.id}')">
+      <span class="pc-icon">${p.icon}</span><span class="pc-name">${p.name}</span>
+      <span class="pc-status${conn.targets.length>0?' done':''}" id="pstatus-${p.id}">${conn.targets.length>0 ? '✓ '+conn.targets.slice(0,2).join(', ')+(conn.targets.length>2?` +${conn.targets.length-2}`:'') : 'tap to configure'}</span>
+    </div>
+    <div class="pc-body" id="pbody-${p.id}">
+      <div class="pc-q">Which identities does this feed <strong>mostly reinforce</strong>?</div>
+      <div class="id-toggle-grid">${togglesHtml}</div>
+      <div class="strength-row"><span class="strength-lbl">Amplification:</span><div class="strength-options">${mkStrBtn('light')}${mkStrBtn('moderate')}${mkStrBtn('heavy')}</div></div>
+    </div>`;
+  container.appendChild(card);
+  if (selectedPlatforms.length === 1) { const body = document.getElementById('pbody-' + p.id); if (body) body.classList.add('open'); }
+}
+
+function toggleCard(pid) { const body = document.getElementById('pbody-' + pid); if (body) body.classList.toggle('open'); }
+
+function markNone(pid, btn) {
+  const conn = platformConnections[pid];
+  if (conn.markedNone) { conn.markedNone = false; btn.classList.remove('sel'); btn.style.cssText = ''; }
+  else {
+    conn.markedNone = true; conn.targets = [];
+    btn.classList.add('sel'); btn.style.background = '#64748b'; btn.style.color = 'white'; btn.style.borderColor = 'transparent';
+    document.querySelectorAll(`[data-pid="${pid}"].id-toggle:not(.none-toggle)`).forEach(b => { b.classList.remove('sel'); b.style.cssText = ''; });
+  }
+  refreshPlatformStatus(pid);
+}
+
+function toggleTarget(pid, label, color, btn) {
+  const conn = platformConnections[pid];
+  if (conn.markedNone) { conn.markedNone = false; const nb = document.querySelector(`[data-pid="${pid}"].none-toggle`); if (nb) { nb.classList.remove('sel'); nb.style.cssText = ''; } }
+  const idx = conn.targets.indexOf(label);
+  if (idx >= 0) { conn.targets.splice(idx, 1); btn.classList.remove('sel'); btn.style.cssText = ''; }
+  else { conn.targets.push(label); btn.classList.add('sel'); btn.style.background = color; btn.style.color = 'white'; btn.style.borderColor = 'transparent'; }
+  refreshPlatformStatus(pid);
+}
+
+function setStrength(pid, strength, btn) {
+  platformConnections[pid].strength = strength;
+  btn.closest('.strength-options').querySelectorAll('.strength-btn').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+}
+
+function refreshPlatformStatus(pid) {
+  const conn = platformConnections[pid];
+  const el = document.getElementById('pstatus-' + pid);
+  const card = document.getElementById('pcard-' + pid);
+  if (!el) return;
+  if (conn.markedNone) { el.className = 'pc-status done'; el.textContent = '✓ Diverse / no single identity'; if (card) card.classList.add('complete'); }
+  else if (conn.targets.length > 0) { el.className = 'pc-status done'; el.textContent = '✓ ' + conn.targets.slice(0,2).join(', ') + (conn.targets.length > 2 ? ` +${conn.targets.length-2}` : ''); if (card) card.classList.add('complete'); }
+  else { el.className = 'pc-status'; el.textContent = 'no identity selected'; if (card) card.classList.remove('complete'); }
+}
+
+function updateP3Btn() { document.getElementById('to-p4').disabled = selectedPlatforms.length === 0; }
+
+function buildMobileAltPanel() {
+  const list = document.getElementById('canvas-alt-list');
+  list.innerHTML = '';
+  selectedIdentities.forEach(id => {
+    if (!mobileOverlap[id.label]) mobileOverlap[id.label] = 'medium';
+    const cur = mobileOverlap[id.label];
+    const row = document.createElement('div');
+    row.className = 'canvas-alt-identity';
+    row.innerHTML = `<div class="canvas-alt-dot" style="background:${id.color}"></div><span class="canvas-alt-name">${id.label}</span><div class="canvas-overlap-btns"><button class="cob${cur==='low'?' sel':''}" onclick="setMobileOverlap('${id.label}','low',this)">Separate</button><button class="cob${cur==='medium'?' sel':''}" onclick="setMobileOverlap('${id.label}','medium',this)">Some overlap</button><button class="cob${cur==='high'?' sel':''}" onclick="setMobileOverlap('${id.label}','high',this)">Lots of overlap</button></div>`;
+    list.appendChild(row);
+  });
+}
+
+function setMobileOverlap(label, level, btn) {
+  mobileOverlap[label] = level;
+  btn.closest('.canvas-overlap-btns').querySelectorAll('.cob').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+  updateMobileMeters();
+}
+
+function updateMobileMeters() {
+  const vals = { low: 0, medium: 40, high: 80 };
+  const scores = Object.values(mobileOverlap).map(v => vals[v] || 40);
+  const raw = scores.length ? Math.round(scores.reduce((a,b) => a+b, 0) / scores.length) : 0;
+  overlapPct = raw;
+  const of = document.getElementById('id-overlap-fill');
+  of.style.width = raw + '%';
+  of.style.background = raw > 60 ? '#c2410c' : raw > 30 ? '#b45309' : '#15803d';
+  document.getElementById('id-overlap-lbl').textContent = `${raw}% — ${raw > 60 ? 'tightly clustered' : raw > 30 ? 'moderate overlap' : 'distinct'}`;
+}
+
+function computeFeedConc() {
+  const strengthBonus = { light:5, moderate:12, heavy:20 };
+  let feedBonus = 0; const tally={};let total=0;
+  platformNodes.forEach(pn=>{
+    const conn = platformConnections[pn.id] || { targets:[], strength:'moderate', markedNone:false };
+    if (conn.markedNone || conn.targets.length === 0) return;
+    const bonus = strengthBonus[conn.strength] || 12;
+    conn.targets.forEach(t=>{ tally[t]=(tally[t]||0)+1; total++; feedBonus += bonus / conn.targets.length; });
+  });
+  feedBonus = Math.min(40, Math.round(feedBonus)); feedConcPct = feedBonus;
+  const ff=document.getElementById('feed-conc-fill');
+  ff.style.width=feedBonus+'%';
+  ff.style.background=feedBonus>25?'#c2410c':feedBonus>12?'#b45309':'#15803d';
+  document.getElementById('feed-conc-lbl').textContent = total>0 ? `+${feedBonus}pts · "${Object.entries(tally).sort((a,b)=>b[1]-a[1])[0][0]}" most amplified` : 'Connect platforms to see impact';
+}
+
+function buildMap() {
+  const activePlatforms = PLATFORMS.filter(p => selectedPlatforms.includes(p.id));
+  platformNodes = activePlatforms.map(p => ({ id: p.id, name: p.name, icon: p.icon, x: 0, y: 0, r: 22 }));
+
+  if (isMobile()) {
+    document.getElementById('canvas-alt-panel').style.display = 'block';
+    document.querySelector('.canvas-wrap').style.display = 'none';
+    document.getElementById('map-legend').style.display = 'none';
+    buildMobileAltPanel(); updateMobileMeters(); computeFeedConc();
+    return;
+  }
+
+  document.getElementById('canvas-alt-panel').style.display = 'none';
+  document.querySelector('.canvas-wrap').style.display = 'block';
+  document.getElementById('map-legend').style.display = 'flex';
+
+  const canvas = document.getElementById('mapCanvas');
+  canvasW = canvas.getBoundingClientRect().width || canvas.offsetWidth || 660;
+  canvas.width = canvasW; canvas.height = canvasH; canvas.style.cursor = 'default';
+  const cx = canvasW/2, cy = canvasH/2, n = selectedIdentities.length;
+  const idSpread = Math.min(canvasW, canvasH) * 0.20;
+  const importanceRadius = { low: 22, medium: 38, high: 54 };
+  identityNodes = selectedIdentities.map((id, i) => ({
+    label: id.label, color: id.color,
+    x: cx + idSpread * Math.cos((2*Math.PI*i/n) - Math.PI/2),
+    y: cy + idSpread * Math.sin((2*Math.PI*i/n) - Math.PI/2),
+    r: importanceRadius[identityImportance[id.label] || 'medium']
+  }));
+  const m = activePlatforms.length, platSpread = Math.min(canvasW*0.43, canvasH*0.43);
+  platformNodes = activePlatforms.map((p, i) => ({
+    id: p.id, name: p.name, icon: p.icon,
+    x: cx + platSpread * Math.cos((2*Math.PI*i/m) - Math.PI/2),
+    y: cy + platSpread * Math.sin((2*Math.PI*i/m) - Math.PI/2), r: 22
+  }));
+  buildMapLegend(); setupCanvasEvents(canvas);
+  cancelAnimationFrame(animFrame);
+  animFrame = requestAnimationFrame(function loop() { drawFrame(canvas); animFrame = requestAnimationFrame(loop); });
+}
+
+function buildMapLegend() {
+  const leg = document.getElementById('map-legend'); leg.innerHTML = '';
+  identityNodes.forEach(n => { const item = document.createElement('div'); item.className = 'legend-item'; item.innerHTML = `<div class="legend-swatch" style="background:${n.color}"></div><span>${n.label}</span>`; leg.appendChild(item); });
+  if (platformNodes.length > 0) { const item = document.createElement('div'); item.className = 'legend-item'; item.innerHTML = `<div class="legend-swatch platform-sq"></div><span>Platform</span>`; leg.appendChild(item); }
+}
+
+function drawFrame(canvas) {
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvasW, canvasH);
+  const sCfg = { light:{w:1.5,a:0.22}, moderate:{w:3.5,a:0.50}, heavy:{w:6,a:0.78} };
+  platformNodes.forEach(pn => {
+    const conn = platformConnections[pn.id] || { targets:[], strength:'moderate' };
+    const { w, a } = sCfg[conn.strength] || sCfg.moderate;
+    conn.targets.forEach(lbl => {
+      const idn = identityNodes.find(n => n.label === lbl); if (!idn) return;
+      const dx=idn.x-pn.x, dy=idn.y-pn.y, dist=Math.hypot(dx,dy); if (dist<1) return;
+      const ux=dx/dist, uy=dy/dist;
+      const x1=pn.x+ux*(pn.r+2), y1=pn.y+uy*(pn.r+2), x2=idn.x-ux*(idn.r+5), y2=idn.y-uy*(idn.r+5);
+      ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.strokeStyle=`rgba(51,65,85,${a})`; ctx.lineWidth=w; ctx.setLineDash([]); ctx.stroke();
+      const ang=Math.atan2(y2-y1,x2-x1), hl=9+w;
+      ctx.beginPath(); ctx.moveTo(x2,y2); ctx.lineTo(x2-hl*Math.cos(ang-0.38),y2-hl*Math.sin(ang-0.38)); ctx.lineTo(x2-hl*Math.cos(ang+0.38),y2-hl*Math.sin(ang+0.38)); ctx.closePath(); ctx.fillStyle=`rgba(51,65,85,${Math.min(1,a+0.2)})`; ctx.fill();
+    });
+  });
+  for (let i=0;i<identityNodes.length;i++) for (let j=i+1;j<identityNodes.length;j++) {
+    const a=identityNodes[i], b=identityNodes[j], d=Math.hypot(a.x-b.x,a.y-b.y);
+    if (d<a.r+b.r) { const mx=(a.x+b.x)/2, my=(a.y+b.y)/2, br=(a.r+b.r-d)*0.65; const g=ctx.createRadialGradient(mx,my,0,mx,my,br); g.addColorStop(0,'rgba(80,50,20,0.28)'); g.addColorStop(1,'rgba(80,50,20,0)'); ctx.beginPath(); ctx.arc(mx,my,br,0,Math.PI*2); ctx.fillStyle=g; ctx.fill(); }
+  }
+  identityNodes.forEach(nd => {
+    const g=ctx.createRadialGradient(nd.x,nd.y,nd.r*0.2,nd.x,nd.y,nd.r*1.7); g.addColorStop(0,nd.color+'1a'); g.addColorStop(1,'transparent');
+    ctx.beginPath(); ctx.arc(nd.x,nd.y,nd.r*1.7,0,Math.PI*2); ctx.fillStyle=g; ctx.fill();
+    ctx.beginPath(); ctx.arc(nd.x,nd.y,nd.r,0,Math.PI*2); ctx.fillStyle=nd.color+'20'; ctx.fill(); ctx.strokeStyle=nd.color; ctx.lineWidth=2.5; ctx.stroke();
+    ctx.fillStyle=nd.color; const fs=Math.max(9,Math.min(12,nd.r*0.3));
+    ctx.font=`600 ${fs}px system-ui,sans-serif`; ctx.textAlign='center'; ctx.textBaseline='middle';
+    drawWrapped(ctx,nd.label,nd.x,nd.y,nd.r*1.6,fs+3);
+  });
+  platformNodes.forEach(pn => {
+    const s=pn.r; ctx.fillStyle='white'; ctx.strokeStyle='#334155'; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.roundRect(pn.x-s,pn.y-s,s*2,s*2,5); ctx.fill(); ctx.stroke();
+    ctx.font=`${Math.round(s*0.82)}px sans-serif`; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillStyle='#1e293b';
+    ctx.fillText(pn.icon,pn.x,pn.y-3); ctx.font=`500 9px system-ui,sans-serif`; ctx.fillText(pn.name.split('/')[0].trim().split(' ')[0],pn.x,pn.y+s*0.72);
+  });
+  updateMeters();
+}
+
+function drawWrapped(ctx,text,x,y,maxW,lineH) {
+  if (ctx.measureText(text).width<=maxW||text.split(' ').length===1) { ctx.fillText(text,x,y); return; }
+  const words=text.split(' '), mid=Math.ceil(words.length/2);
+  ctx.fillText(words.slice(0,mid).join(' '),x,y-lineH/2); ctx.fillText(words.slice(mid).join(' '),x,y+lineH/2);
+}
+
+function updateMeters() {
+  let rawOverlap=0;
+  if (identityNodes.length>=2) {
+    let sum=0,pairs=0;
+    for (let i=0;i<identityNodes.length;i++) for (let j=i+1;j<identityNodes.length;j++) { pairs++; const d=Math.hypot(identityNodes[i].x-identityNodes[j].x,identityNodes[i].y-identityNodes[j].y), sr=identityNodes[i].r+identityNodes[j].r; sum+=Math.max(0,1-d/sr); }
+    rawOverlap=Math.round(sum/pairs*100);
+  }
+  const strengthBonus={light:5,moderate:12,heavy:20}; let feedBonus=0; const tally={};let total=0;
+  platformNodes.forEach(pn=>{ const conn=platformConnections[pn.id]||{targets:[],strength:'moderate',markedNone:false}; if(conn.markedNone||conn.targets.length===0)return; const bonus=strengthBonus[conn.strength]||12; conn.targets.forEach(t=>{tally[t]=(tally[t]||0)+1;total++;feedBonus+=bonus/conn.targets.length;}); });
+  feedBonus=Math.min(40,Math.round(feedBonus)); feedConcPct=feedBonus; overlapPct=Math.min(100,rawOverlap+feedBonus);
+  const of=document.getElementById('id-overlap-fill'); of.style.width=overlapPct+'%'; of.style.background=overlapPct>60?'#c2410c':overlapPct>30?'#b45309':'#15803d';
+  document.getElementById('id-overlap-lbl').textContent=feedBonus>0?`${rawOverlap}% physical + ${feedBonus}% feed = ${overlapPct}%`:`${overlapPct}% — ${overlapPct>60?'tightly clustered':overlapPct>30?'moderate overlap':'distinct'}`;
+  const ff=document.getElementById('feed-conc-fill'); ff.style.width=feedBonus+'%'; ff.style.background=feedBonus>25?'#c2410c':feedBonus>12?'#b45309':'#15803d';
+  document.getElementById('feed-conc-lbl').textContent=total>0?`+${feedBonus}pts · "${Object.entries(tally).sort((a,b)=>b[1]-a[1])[0][0]}" most amplified`:(platformNodes.length>0?'Feeds marked diverse':'Connect platforms to see impact');
+}
+
+function getPos(canvas,cx,cy) { const r=canvas.getBoundingClientRect(); return {x:(cx-r.left)*(canvas.width/r.width),y:(cy-r.top)*(canvas.height/r.height)}; }
+
+function setupCanvasEvents(canvas) {
+  canvas.addEventListener('mousedown',e=>{const p=getPos(canvas,e.clientX,e.clientY);startDrag(p.x,p.y);});
+  canvas.addEventListener('mousemove',e=>{const p=getPos(canvas,e.clientX,e.clientY);moveDrag(p.x,p.y,canvas);});
+  canvas.addEventListener('mouseup',()=>{dragging=null;canvas.style.cursor='default';});
+  canvas.addEventListener('mouseleave',()=>{dragging=null;});
+  canvas.addEventListener('touchstart',e=>{e.preventDefault();const p=getPos(canvas,e.touches[0].clientX,e.touches[0].clientY);startDrag(p.x,p.y);},{passive:false});
+  canvas.addEventListener('touchmove',e=>{e.preventDefault();const p=getPos(canvas,e.touches[0].clientX,e.touches[0].clientY);moveDrag(p.x,p.y,canvas);},{passive:false});
+  canvas.addEventListener('touchend',()=>{dragging=null;});
+}
+
+function startDrag(x,y) {
+  const h=isMobile()?20:10;
+  for (let i=identityNodes.length-1;i>=0;i--) { const n=identityNodes[i]; if(Math.hypot(x-n.x,y-n.y)<n.r+h){dragging={type:'id',i};dragOffX=x-n.x;dragOffY=y-n.y;return;} }
+  for (let i=platformNodes.length-1;i>=0;i--) { const n=platformNodes[i]; if(Math.abs(x-n.x)<n.r+h&&Math.abs(y-n.y)<n.r+h){dragging={type:'pl',i};dragOffX=x-n.x;dragOffY=y-n.y;return;} }
+}
+
+function moveDrag(x,y,canvas) {
+  if (!dragging) { canvas.style.cursor=(identityNodes.some(n=>Math.hypot(x-n.x,y-n.y)<n.r+10)||platformNodes.some(n=>Math.abs(x-n.x)<n.r+10&&Math.abs(y-n.y)<n.r+10))?'grab':'default'; return; }
+  canvas.style.cursor='grabbing';
+  const arr=dragging.type==='id'?identityNodes:platformNodes, n=arr[dragging.i];
+  n.x=Math.max(n.r,Math.min(canvasW-n.r,x-dragOffX)); n.y=Math.max(n.r,Math.min(canvasH-n.r,y-dragOffY));
+}
+
+function buildReflect() {
+  cancelAnimationFrame(animFrame);
+  const idComplexity=100-overlapPct, feedPenalty=feedConcPct*0.5, score=Math.max(0,Math.round(idComplexity-feedPenalty));
+  let level,color,desc;
+  if(score>=75){level='Very Complex';color='#15803d';desc='Your identities span diverse communities, and your feeds don\'t heavily amplify any single one. This gives you more natural resistance to targeted misinformation — it\'s harder to have your full identity profile exploited when your communities are genuinely distinct.';}
+  else if(score>=50){level='Mostly Complex';color='#2563eb';desc='You have a reasonable mix of identities, though some still overlap. Certain misinformation may find more traction depending on which identity your feeds emphasize most. Some built-in resistance exists, but staying aware of your feed patterns matters.';}
+  else if(score>=30){level='Partially Complex';color='#b45309';desc='Many of your identities overlap, and your feeds may emphasize certain ones more than others. You may be more vulnerable to misinformation that targets those emphasized identities — particularly content that feels personally relevant or confirms what you already believe.';}
+  else{level='Less Complex';color='#c2410c';desc='Your identities cluster tightly together, and your feeds reinforce the same groups. This makes you more likely to encounter misinformation that feels validated from multiple directions at once — content designed to resonate with people whose identities look a lot like yours.';}
+  document.getElementById('reflect-score').innerHTML=`<div class="score-card"><div class="score-big" style="color:${color}">${score}</div><div><div class="score-meta-lbl">Complexity Score</div><div class="score-level" style="color:${color}">${level} Complexity</div><div class="score-desc">${desc}</div></div></div><p style="font-size:12px;color:var(--ink-light);font-style:italic;margin-bottom:20px;line-height:1.6;">This score reflects identity overlap and feed amplification only — not a diagnostic.</p>`;
+  const tally={};let totalArrows=0;
+  platformNodes.forEach(pn=>{ const conn=platformConnections[pn.id]||{targets:[],strength:'moderate',markedNone:false}; if(conn.markedNone)return; conn.targets.forEach(t=>{tally[t]=(tally[t]||0)+1;totalArrows++;}); });
+  let ampHtml='<div class="amp-label">How Your Feeds Amplify Your Identities</div>';
+  if(!platformNodes.length||!totalArrows) { ampHtml+='<div style="font-size:13px;color:var(--ink-light);font-style:italic">No platform connections configured.</div>'; }
+  else {
+    platformNodes.forEach(pn=>{ const c=platformConnections[pn.id]||{targets:[],strength:'moderate',markedNone:false}; const targets=c.markedNone?'<em style="color:#15803d">diverse</em>':c.targets.length?c.targets.join(', '):'<em style="color:var(--ink-light)">not configured</em>'; ampHtml+=`<div class="amp-row"><span class="amp-platform">${pn.icon} ${pn.name.split('/')[0].trim()}</span><span class="amp-arrow">→</span><span class="amp-targets">${targets}${c.markedNone?'':'<span class="amp-strength">'+c.strength+'</span>'}</span></div>`; });
+    const top=Object.entries(tally).sort((a,b)=>b[1]-a[1])[0];
+    ampHtml+=`<div class="top-amplified"><strong style="color:var(--ink)">"${top[0]}"</strong> is your most-amplified identity — reinforced by ${top[1]} of your ${platformNodes.length} feed${platformNodes.length>1?'s':''}.</div>`;
+  }
+  document.getElementById('amplifier-callout').innerHTML=ampHtml;
+  const topId=Object.entries(tally).sort((a,b)=>b[1]-a[1])[0]?.[0]||'your main identity';
+  const qs=[
+    {q:`Your feeds most heavily amplify "${topId}." When you see content that supports this identity, does it just feel right in a way that content challenging it doesn't? What might you be letting through unchecked — and why might you believe one argument over another?`,ph:'Think about how you react differently to content that confirms vs. challenges this identity...'},
+    {q:'Look at two identities on your map that sometimes clash. When your feed forces you to choose between them, which one usually wins — and what happens to the other part of you?',ph:'e.g. My identity as a parent and my political identity sometimes clash when I see certain posts...'},
+    {q:'Is there an identity on your map you could engage with more — online or offline — that might give you a genuinely different perspective? Or is there a community or group you\'ve never really identified with that might be worth exploring? What\'s one concrete step you could take this week to expand your map?',ph:'e.g. I could join a local group, follow new accounts, or have a conversation with someone who...'},
+  ];
+  const qContainer=document.getElementById('reflect-qs');
+  qContainer.innerHTML='<div class="ws-eyebrow" style="margin-bottom:16px">Reflection Questions</div>';
+  qs.forEach((q,i)=>{ const div=document.createElement('div'); div.className='rq'; div.innerHTML=`<div class="rq-q">${i+1}. ${q.q}</div><textarea class="rq-input" placeholder="${q.ph}" rows="3"></textarea>`; qContainer.appendChild(div); });
+}
+
+function shareScore() {
+  const scoreEl = document.querySelector('.score-big');
+  const levelEl = document.querySelector('.score-level');
+  if (!scoreEl || !levelEl) return;
+  const score = scoreEl.textContent;
+  const level = levelEl.textContent;
+  const text = `I just mapped my social identity complexity — my score is ${score} (${level}).\n\nHow complex is your identity map? Find out: https://matthewfacciani.github.io/identity-map\n\n#IdentityMap #Misguided`;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.btn-share');
+    const orig = btn.textContent;
+    btn.textContent = '✓ Copied!';
+    setTimeout(() => { btn.textContent = orig; }, 2000);
+  }).catch(() => {
+    const blob = new Blob([text], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'my-identity-score.txt';
+    a.click();
+  });
+}
+
+
+function exportReflections() {
+  const textareas = document.querySelectorAll('#reflect-qs .rq-input');
+  const questions = document.querySelectorAll('#reflect-qs .rq-q');
+  let output = 'IDENTITY MAP — MY REFLECTIONS\n';
+  output += '================================\n\n';
+  const scoreEl = document.querySelector('.score-big');
+  const levelEl = document.querySelector('.score-level');
+  if (scoreEl && levelEl) output += `Complexity Score: ${scoreEl.textContent} (${levelEl.textContent})\n\n`;
+  output += 'Identities: ' + selectedIdentities.map(id => id.label).join(', ') + '\n';
+  output += 'Platforms: ' + selectedPlatforms.map(pid => { const p = PLATFORMS.find(x => x.id === pid); return p ? p.name : pid; }).join(', ') + '\n\n';
+  output += '--- Reflection Questions ---\n\n';
+  questions.forEach((q, i) => {
+    output += q.textContent + '\n';
+    output += (textareas[i] && textareas[i].value.trim() ? textareas[i].value.trim() : '(no response)') + '\n\n';
+  });
+  output += '---\nGenerated by Identity Map · matthewfacciani.substack.com';
+  navigator.clipboard.writeText(output).then(() => {
+    const btn = document.querySelector('.restart-row .btn-dark');
+    const orig = btn.textContent;
+    btn.textContent = '✓ Copied!';
+    setTimeout(() => { btn.textContent = orig; }, 2000);
+  }).catch(() => {
+    const blob = new Blob([output], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'identity-map-reflections.txt';
+    a.click();
+  });
+}
+
+function goTo(n) {
+  ['panel1','panel2','panel3','panel4','panel5'].forEach((id,i)=>document.getElementById(id).classList.toggle('active',i+1===n));
+  for(let i=1;i<=5;i++){ const sn=document.getElementById('sn'+i),sl=document.getElementById('sl'+i); sn.className='step-num'+(i===n?' active':i<n?' done':''); sn.textContent=i<n?'✓':i; sl.className='step-lbl'+(i===n?' active':''); }
+  if(n===2)buildImportancePanel(); if(n===3)buildPanel3(); if(n===4)buildMap(); if(n===5)buildReflect();
+  window.scrollTo(0,0);
+}
+
+function restart() {
+  selectedIdentities=[];selectedPlatforms=[];platformConnections={};identityImportance={};
+  identityNodes=[];platformNodes=[];dragging=null;overlapPct=0;feedConcPct=0;mobileOverlap={};
+  cancelAnimationFrame(animFrame);buildPanel1();updateIdTally();goTo(1);
+}
+
+document.getElementById('to-p2').addEventListener('click',()=>goTo(2));
+document.getElementById('to-p4').addEventListener('click',()=>goTo(4));
+buildPanel1();
+</script>
+</body>
+</html>
