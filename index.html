@@ -330,6 +330,7 @@ const IDENTITY_CATS = [
 
 const PLATFORMS = [
   { id:'twitter', name:'Twitter / X', icon:'𝕏' },
+  { id:'bluesky', name:'Bluesky', icon:'🦋' },
   { id:'threads', name:'Threads', icon:'🧵' },
   { id:'instagram', name:'Instagram', icon:'📷' },
   { id:'tiktok', name:'TikTok', icon:'🎵' },
@@ -458,6 +459,50 @@ function buildPanel3() {
     };
     pChips.appendChild(c);
   });
+  // Custom platform input
+  const customRow = document.createElement('div');
+  customRow.className = 'custom-row';
+  const customInp = document.createElement('input');
+  customInp.className = 'custom-input';
+  customInp.placeholder = 'Add another platform…';
+  const customAdd = document.createElement('button');
+  customAdd.className = 'custom-add';
+  customAdd.textContent = '+ Add';
+  customAdd.onclick = () => {
+    const v = customInp.value.trim(); if (!v) return;
+    const pid = 'custom_' + v.toLowerCase().replace(/\W/g,'_');
+    if (selectedPlatforms.includes(pid)) return;
+    const p = { id: pid, name: v, icon: '📱' };
+    PLATFORMS.push(p);
+    const c = document.createElement('button');
+    c.className = 'chip platform-chip sel';
+    c.style.background = 'var(--platform-color)';
+    c.textContent = p.icon + ' ' + p.name;
+    c.dataset.pid = pid;
+    c.onclick = () => {
+      if (selectedPlatforms.includes(pid)) {
+        selectedPlatforms = selectedPlatforms.filter(x => x !== pid);
+        c.classList.remove('sel'); c.style.background = '';
+        const card = document.getElementById('pcard-' + pid);
+        if (card) card.remove();
+      } else {
+        selectedPlatforms.push(pid);
+        c.classList.add('sel'); c.style.background = 'var(--platform-color)';
+        if (!platformConnections[pid]) platformConnections[pid] = { targets: [], strength: 'moderate' };
+        renderPlatformCard(p, area);
+      }
+      updateP3Btn();
+    };
+    pChips.appendChild(c);
+    selectedPlatforms.push(pid);
+    platformConnections[pid] = { targets: [], strength: 'moderate' };
+    renderPlatformCard(p, area);
+    updateP3Btn();
+    customInp.value = '';
+  };
+  customInp.onkeydown = e => { if (e.key === 'Enter') customAdd.click(); };
+  customRow.append(customInp, customAdd);
+  block.appendChild(customRow);
   selectedPlatforms.forEach(pid => {
     const p = PLATFORMS.find(x => x.id === pid);
     if (p && !document.getElementById('pcard-' + pid)) renderPlatformCard(p, area);
