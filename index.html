@@ -325,6 +325,7 @@ const IDENTITY_CATS = [
   { name: 'Family', color: '#be185d', items: ['Parent', 'Grandparent', 'Spouse / Partner', 'Caregiver', 'Homeschool family', 'Traditional family values', 'Multigenerational household', 'Military family', 'Single parent', 'Childfree']},
   { name: 'How I Think', color: '#0891b2', items: ['Skeptic', 'Cynic', 'Optimist', 'Pragmatist', 'Traditionalist', 'Idealist']},
   { name: 'Interests & Community', color: '#65a30d', items: ['Gun owner', 'Environmentalist', 'Finance community', 'Self-reliance community', 'LGBTQ+ community', 'Sports fan', 'Gamer', 'True crime follower', 'Diet / nutrition community', 'Self-improvement', 'Faith community member', 'Neighborhood organizer']},
+  { name: 'Other Identities', color: '#6b7280', items: [], note: 'Some of the most important identities aren\'t listed above — including race, ethnicity, nationality, disability, gender identity, sexuality, and others that may be central to how you see yourself and move through the world. Add any that feel significant to you below.' },
 ];
 
 const PLATFORMS = [
@@ -355,7 +356,7 @@ function buildPanel1() {
   IDENTITY_CATS.forEach(cat => {
     const block = document.createElement('div');
     block.className = 'cat-block';
-    block.innerHTML = `<div class="cat-label"><div class="cat-dot" style="background:${cat.color}"></div>${cat.name}</div><div class="chips" id="chips_${cat.name.replace(/\W/g,'_')}"></div>`;
+    block.innerHTML = `<div class="cat-label"><div class="cat-dot" style="background:${cat.color}"></div>${cat.name}</div>${cat.note ? `<p style="font-size:13px;color:var(--ink-mid);line-height:1.6;margin-bottom:12px;font-style:italic;">${cat.note}</p>` : ''}<div class="chips" id="chips_${cat.name.replace(/\W/g,'_')}"></div>`;
     const chipsDiv = block.querySelector('.chips');
     cat.items.forEach(item => {
       const c = createChip(item, cat.color, false, () => toggleIdentity(item, cat.color, c));
