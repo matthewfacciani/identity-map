@@ -185,7 +185,39 @@ canvas#mapCanvas { display: block; width: 100%; }
 <div class="ws-eyebrow">Interactive Worksheet</div>
 <h1 class="ws-title">Your <em>Identity Map</em></h1>
 <hr class="header-rule">
-<p class="ws-desc">What makes you <em>you</em>? The groups you belong to, the roles you play, the values you hold: these identities shape what you believe and who you trust. They also shape your biases. Social media algorithms are designed to amplify certain identities over others, quietly narrowing what feels true. This exercise makes that structure visible — so you can recognize your biases, become more resilient to misinformation, and engage more thoughtfully in our information ecosystem.</p>
+<div style="display:flex;gap:28px;align-items:center;flex-wrap:wrap;">
+  <p class="ws-desc" style="flex:1 1 330px;min-width:240px;margin:0;">What makes you <em>you</em>? The groups you belong to, the roles you play, and the values you hold shape what you believe and who you trust. Social media algorithms amplify certain identities, quietly narrowing what feels true. This exercise helps you recognize those influences, become more resilient to misinformation, and engage more thoughtfully with information online.</p>
+  <div style="flex:0 0 auto;margin:0 auto;">
+    <svg width="260" height="98" viewBox="0 0 320 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation" style="overflow:visible;">
+      <defs>
+        <marker id="imArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="#a8a29e"/>
+        </marker>
+        <filter id="imSoft" x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+          <feOffset dy="1.5" result="o"/>
+          <feComponentTransfer><feFuncA type="linear" slope="0.16"/></feComponentTransfer>
+          <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <g filter="url(#imSoft)" stroke-width="2">
+        <circle cx="72"  cy="60" r="33" fill="#15803d" fill-opacity="0.14" stroke="#15803d" stroke-opacity="0.85"/>
+        <circle cx="96"  cy="82" r="28" fill="#be185d" fill-opacity="0.14" stroke="#be185d" stroke-opacity="0.85"/>
+        <circle cx="116" cy="54" r="22" fill="#b45309" fill-opacity="0.14" stroke="#b45309" stroke-opacity="0.85"/>
+        <circle cx="210" cy="52" r="27" fill="#c2410c" fill-opacity="0.14" stroke="#c2410c" stroke-opacity="0.85"/>
+        <circle cx="226" cy="74" r="22" fill="#7c3aed" fill-opacity="0.14" stroke="#7c3aed" stroke-opacity="0.85"/>
+        <circle cx="278" cy="70" r="18" fill="#0891b2" fill-opacity="0.14" stroke="#0891b2" stroke-opacity="0.85"/>
+        <circle cx="150" cy="96" r="11" fill="#0369a1" fill-opacity="0.14" stroke="#0369a1" stroke-opacity="0.85"/>
+      </g>
+      <g stroke="#a8a29e" stroke-width="1.4" fill="none" opacity="0.75">
+        <rect x="146" y="8"  width="14" height="14" rx="3" fill="#fffdf9"/>
+        <line x1="153" y1="22" x2="192" y2="36" marker-end="url(#imArrow)"/>
+        <rect x="298" y="18" width="14" height="14" rx="3" fill="#fffdf9"/>
+        <line x1="300" y1="32" x2="246" y2="64" marker-end="url(#imArrow)"/>
+      </g>
+    </svg>
+  </div>
+</div>
 <div style="margin-top:14px;padding:12px 16px;border:1px solid var(--rule);border-radius:6px;background:var(--paper);font-size:12px;color:var(--ink-light);line-height:1.6;">
   <strong style="color:var(--ink-mid)">For reflection and educational purposes only.</strong> The percentages and scores in your results are rough estimates meant to help you visualize how your identities interact — not precise measurements. Think of your identity map as a mirror, not a diagnostic tool.
 </div>
@@ -206,12 +238,14 @@ canvas#mapCanvas { display: block; width: 100%; }
 <!-- PANEL 1 -->
 <div class="panel active" id="panel1">
   <div class="section-title">Which groups do you belong to?</div>
-  <p class="section-body">We all identify with certain groups — political, professional, religious, geographical, interest-based. Which ones feel true to you? Select at least three from the categories below, or add your own. Focus on identities that feel genuinely important to you — ones that shape how you see the world.</p>
+  <p class="section-body">We all identify with certain groups: political, professional, religious, geographical, interest-based. Which ones feel true to you? Select at least three from the categories below, or add your own. Focus on identities that feel genuinely important to you — ones that shape how you see the world.</p>
+  <p class="section-body" style="font-size:13px;font-style:italic;color:var(--ink-light);">A note for readers outside the US: some preset options lean toward a US context. The "Add your own" field under each category is there so you can describe yourself in your own terms.</p>
   <div id="id-categories"></div>
   <div class="tally-bar">
     <span class="tally-txt">Identities selected</span>
     <span class="tally-num" id="id-tally">0</span>
   </div>
+  <div id="id-cap-msg" style="display:none;font-size:12px;color:#b45309;font-style:italic;padding:6px 2px 0;line-height:1.5;">You've selected 15 identities — consider which ones matter most to you.</div>
   <div class="btn-row">
     <button class="btn btn-dark" id="to-p2" disabled>Next: Rate Importance →</button>
   </div>
@@ -221,7 +255,7 @@ canvas#mapCanvas { display: block; width: 100%; }
 <div class="panel" id="panel2">
   <div class="section-title">How important is each identity to you?</div>
   <p class="section-body">Now, rate how important each identity is to you: how central does it feel to your sense of self? Your answers will determine how large each identity appears on your map — larger circles mean that identity matters more to you.</p>
-  <div class="hint-box">💡 Think about which identities you'd feel most lost without. Some may matter but feel more situational — save the largest circle for identities that genuinely define you.</div>
+  <div class="hint-box">💡 Think about which identities you'd feel most lost without. Some may matter but feel more situational. Save the largest circle for identities that genuinely define you.</div>
   <div id="importance-list"></div>
   <div class="btn-row">
     <button class="btn btn-ghost" onclick="goTo(1)">← Back</button>
@@ -232,7 +266,7 @@ canvas#mapCanvas { display: block; width: 100%; }
 <!-- PANEL 3 -->
 <div class="panel" id="panel3">
   <div class="section-title">Which social media platforms do you use?</div>
-  <p class="section-body">After you select a platform, click or tap it to choose which identities appear most on that feed — and how strongly it amplifies them.</p>
+  <p class="section-body">After you select a platform, click or tap it to choose which identities appear most on that feed, and how strongly it amplifies them.</p>
   <div class="hint-box">💡 Think about not only the people and pages you follow, but also what the algorithms add to your feed.</div>
   <div id="platform-area"></div>
   <div class="btn-row">
@@ -276,6 +310,9 @@ canvas#mapCanvas { display: block; width: 100%; }
     </div>
   </div>
   <p style="font-size:11px;color:var(--ink-light);font-style:italic;margin-bottom:18px;">Percentages are estimates for reflection only.</p>
+  <div style="display:flex;justify-content:center;margin-bottom:18px;">
+    <button class="btn btn-ghost" onclick="exportMap()">↓ Save my map</button>
+  </div>
   <div class="btn-row">
     <button class="btn btn-ghost" onclick="goTo(3)">← Back</button>
     <button class="btn btn-dark" onclick="goTo(5)">Reflect on My Map →</button>
@@ -294,6 +331,7 @@ canvas#mapCanvas { display: block; width: 100%; }
   <div id="reflect-qs"></div>
   <div class="restart-row">
     <button class="btn btn-dark" onclick="exportReflections()">📋 Copy My Responses</button>
+    <button class="btn btn-share btn" onclick="exportMap()">↓ Save My Map</button>
     <button class="btn btn-share btn" onclick="shareScore()">🔗 Share My Score</button>
     <button class="btn btn-ghost" onclick="goTo(4)">← Back to Map</button>
     <button class="btn btn-ghost" onclick="restart()">↺ Start Over</button>
@@ -317,9 +355,9 @@ canvas#mapCanvas { display: block; width: 100%; }
 </div>
 <script>
 const IDENTITY_CATS = [
-  { name: 'Politics', color: '#c2410c', items: ['Progressive', 'Liberal', 'Conservative', 'Libertarian', 'Independent', 'Activist', 'Politically disengaged']},
+  { name: 'Politics', color: '#c2410c', items: ['Left-leaning', 'Centrist', 'Right-leaning', 'Libertarian', 'Politically independent', 'Activist', 'Politically disengaged']},
   { name: 'Religion & Worldview', color: '#0369a1', items: ['Evangelical Christian', 'Catholic', 'Protestant', 'Jewish', 'Muslim', 'Hindu', 'Buddhist', 'Spiritual but not religious', 'Atheist / agnostic']},
-  { name: 'Where I Live', color: '#15803d', items: ['Rural', 'Small town', 'Suburban', 'Urban', 'South', 'Midwest', 'Northeast', 'West Coast', 'Immigrant / newcomer', 'Military community']},
+  { name: 'Where I Live', color: '#15803d', items: ['Rural', 'Small town', 'Suburban', 'Urban', 'Immigrant / newcomer', 'Military community']},
   { name: 'Health & Wellness', color: '#7c3aed', items: ['Fitness enthusiast', 'Recreational sports', 'Clean eating / natural foods', 'Holistic health advocate', 'Wellness community', 'Public health supporter']},
   { name: 'Work & Role', color: '#b45309', items: ['Healthcare worker', 'Teacher / educator', 'Scientist / researcher', 'Journalist / media', 'Tradesperson', 'Military / law enforcement', 'Business owner', 'Student', 'Stay-at-home parent', 'Retired']},
   { name: 'Family', color: '#be185d', items: ['Parent', 'Grandparent', 'Spouse / Partner', 'Caregiver', 'Homeschool family', 'Traditional family values', 'Multigenerational household', 'Military family', 'Single parent', 'Childfree']},
@@ -327,6 +365,9 @@ const IDENTITY_CATS = [
   { name: 'Interests & Community', color: '#65a30d', items: ['Gun owner', 'Environmentalist', 'Finance community', 'Self-reliance community', 'LGBTQ+ community', 'Sports fan', 'Gamer', 'True crime follower', 'Diet / nutrition community', 'Self-improvement', 'Faith community member', 'Neighborhood organizer']},
   { name: 'Other Identities', color: '#6b7280', items: [], note: 'Some of the most important identities aren\'t listed above — including race, ethnicity, nationality, disability, gender identity, sexuality, and others that may be central to how you see yourself and move through the world. Add any that feel significant to you below.' },
 ];
+
+// The public URL stamped onto saved map images. Edit this to match where you deploy the tool.
+const MAP_URL = 'matthewfacciani.github.io/identity-map';
 
 const PLATFORMS = [
   { id:'twitter', name:'Twitter / X', icon:'𝕏' },
@@ -360,7 +401,7 @@ function buildPanel1() {
     block.innerHTML = `<div class="cat-label"><div class="cat-dot" style="background:${cat.color}"></div>${cat.name}</div>${cat.note ? `<p style="font-size:13px;color:var(--ink-mid);line-height:1.6;margin-bottom:12px;font-style:italic;">${cat.note}</p>` : ''}<div class="chips" id="chips_${cat.name.replace(/\W/g,'_')}"></div>`;
     const chipsDiv = block.querySelector('.chips');
     cat.items.forEach(item => {
-      const c = createChip(item, cat.color, false, () => toggleIdentity(item, cat.color, c));
+      const c = createChip(item, cat.color, false, () => toggleIdentity(item, cat.color, c, cat.name));
       chipsDiv.appendChild(c);
     });
     const row = document.createElement('div');
@@ -371,9 +412,9 @@ function buildPanel1() {
     addBtn.className = 'custom-add'; addBtn.textContent = '+ Add';
     addBtn.onclick = () => {
       const v = inp.value.trim(); if (!v) return;
-      const c2 = createChip(v, cat.color, true, () => toggleIdentity(v, cat.color, c2));
+      const c2 = createChip(v, cat.color, true, () => toggleIdentity(v, cat.color, c2, cat.name));
       chipsDiv.appendChild(c2);
-      if (!selectedIdentities.find(x => x.label === v)) toggleIdentity(v, cat.color, c2);
+      if (!selectedIdentities.find(x => x.label === v)) toggleIdentity(v, cat.color, c2, cat.name);
       inp.value = '';
     };
     inp.onkeydown = e => { if (e.key === 'Enter') addBtn.click(); };
@@ -392,16 +433,22 @@ function createChip(label, color, presel, onClick) {
   return c;
 }
 
-function toggleIdentity(label, color, chip) {
+function toggleIdentity(label, color, chip, catName) {
   const idx = selectedIdentities.findIndex(x => x.label === label);
   if (idx >= 0) { selectedIdentities.splice(idx, 1); chip.classList.remove('sel'); chip.style.background = ''; }
-  else { selectedIdentities.push({ label, color }); chip.classList.add('sel'); chip.style.background = color; }
+  else {
+    if (selectedIdentities.length >= 15) return;
+    selectedIdentities.push({ label, color, cat: catName }); chip.classList.add('sel'); chip.style.background = color;
+  }
   updateIdTally();
 }
 
 function updateIdTally() {
-  document.getElementById('id-tally').textContent = selectedIdentities.length;
-  document.getElementById('to-p2').disabled = selectedIdentities.length < 2;
+  const n = selectedIdentities.length;
+  document.getElementById('id-tally').textContent = n;
+  document.getElementById('to-p2').disabled = n < 2;
+  const capMsg = document.getElementById('id-cap-msg');
+  if (capMsg) capMsg.style.display = n >= 15 ? '' : 'none';
 }
 
 function buildImportancePanel() {
@@ -597,9 +644,17 @@ function setMobileOverlap(label, level, btn) {
 }
 
 function updateMobileMeters() {
-  const vals = { low: 0, medium: 40, high: 80 };
-  const scores = Object.values(mobileOverlap).map(v => vals[v] || 40);
-  const raw = scores.length ? Math.round(scores.reduce((a,b) => a+b, 0) / scores.length) : 0;
+  // Overlap values tuned to match the desktop geometric range (Separate=0, Some=35, Lots=70).
+  const vals = { low: 0, medium: 35, high: 70 };
+  const IMP_WEIGHTS = { low: 1, medium: 2, high: 3 };
+  let weightedSum = 0, totalWeight = 0;
+  selectedIdentities.forEach(id => {
+    const overlapVal = vals[mobileOverlap[id.label] || 'medium'] ?? 35;
+    const imp = IMP_WEIGHTS[identityImportance[id.label] || 'medium'];
+    weightedSum += overlapVal * imp;
+    totalWeight += imp;
+  });
+  const raw = totalWeight > 0 ? Math.round(weightedSum / totalWeight) : 0;
   overlapPct = raw;
   const of = document.getElementById('id-overlap-fill');
   of.style.width = raw + '%';
@@ -671,12 +726,20 @@ function buildMapLegend() {
 function drawFrame(canvas) {
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, canvasW, canvasH);
+  paintMap(ctx, identityNodes, platformNodes);
+  updateMeters();
+}
+
+// Reusable map renderer: feed arrows, overlap glows, identity circles, and
+// platform nodes for the given node arrays. Used by the live canvas loop and
+// by the image export so both stay identical.
+function paintMap(ctx, idNodes, platNodes) {
   const sCfg = { light:{w:1.5,a:0.22}, moderate:{w:3.5,a:0.50}, heavy:{w:6,a:0.78} };
-  platformNodes.forEach(pn => {
+  platNodes.forEach(pn => {
     const conn = platformConnections[pn.id] || { targets:[], strength:'moderate' };
     const { w, a } = sCfg[conn.strength] || sCfg.moderate;
     conn.targets.forEach(lbl => {
-      const idn = identityNodes.find(n => n.label === lbl); if (!idn) return;
+      const idn = idNodes.find(n => n.label === lbl); if (!idn) return;
       const dx=idn.x-pn.x, dy=idn.y-pn.y, dist=Math.hypot(dx,dy); if (dist<1) return;
       const ux=dx/dist, uy=dy/dist;
       const x1=pn.x+ux*(pn.r+2), y1=pn.y+uy*(pn.r+2), x2=idn.x-ux*(idn.r+5), y2=idn.y-uy*(idn.r+5);
@@ -685,11 +748,11 @@ function drawFrame(canvas) {
       ctx.beginPath(); ctx.moveTo(x2,y2); ctx.lineTo(x2-hl*Math.cos(ang-0.38),y2-hl*Math.sin(ang-0.38)); ctx.lineTo(x2-hl*Math.cos(ang+0.38),y2-hl*Math.sin(ang+0.38)); ctx.closePath(); ctx.fillStyle=`rgba(51,65,85,${Math.min(1,a+0.2)})`; ctx.fill();
     });
   });
-  for (let i=0;i<identityNodes.length;i++) for (let j=i+1;j<identityNodes.length;j++) {
-    const a=identityNodes[i], b=identityNodes[j], d=Math.hypot(a.x-b.x,a.y-b.y);
+  for (let i=0;i<idNodes.length;i++) for (let j=i+1;j<idNodes.length;j++) {
+    const a=idNodes[i], b=idNodes[j], d=Math.hypot(a.x-b.x,a.y-b.y);
     if (d<a.r+b.r) { const mx=(a.x+b.x)/2, my=(a.y+b.y)/2, br=(a.r+b.r-d)*0.65; const g=ctx.createRadialGradient(mx,my,0,mx,my,br); g.addColorStop(0,'rgba(80,50,20,0.28)'); g.addColorStop(1,'rgba(80,50,20,0)'); ctx.beginPath(); ctx.arc(mx,my,br,0,Math.PI*2); ctx.fillStyle=g; ctx.fill(); }
   }
-  identityNodes.forEach(nd => {
+  idNodes.forEach(nd => {
     const g=ctx.createRadialGradient(nd.x,nd.y,nd.r*0.2,nd.x,nd.y,nd.r*1.7); g.addColorStop(0,nd.color+'1a'); g.addColorStop(1,'transparent');
     ctx.beginPath(); ctx.arc(nd.x,nd.y,nd.r*1.7,0,Math.PI*2); ctx.fillStyle=g; ctx.fill();
     ctx.beginPath(); ctx.arc(nd.x,nd.y,nd.r,0,Math.PI*2); ctx.fillStyle=nd.color+'20'; ctx.fill(); ctx.strokeStyle=nd.color; ctx.lineWidth=2.5; ctx.stroke();
@@ -697,13 +760,12 @@ function drawFrame(canvas) {
     ctx.font=`600 ${fs}px system-ui,sans-serif`; ctx.textAlign='center'; ctx.textBaseline='middle';
     drawWrapped(ctx,nd.label,nd.x,nd.y,nd.r*1.6,fs+3);
   });
-  platformNodes.forEach(pn => {
+  platNodes.forEach(pn => {
     const s=pn.r; ctx.fillStyle='white'; ctx.strokeStyle='#334155'; ctx.lineWidth=1.5;
     ctx.beginPath(); ctx.roundRect(pn.x-s,pn.y-s,s*2,s*2,5); ctx.fill(); ctx.stroke();
     ctx.font=`${Math.round(s*0.82)}px sans-serif`; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillStyle='#1e293b';
     ctx.fillText(pn.icon,pn.x,pn.y-3); ctx.font=`500 9px system-ui,sans-serif`; ctx.fillText(pn.name.split('/')[0].trim().split(' ')[0],pn.x,pn.y+s*0.72);
   });
-  updateMeters();
 }
 
 function drawWrapped(ctx,text,x,y,maxW,lineH) {
@@ -712,12 +774,89 @@ function drawWrapped(ctx,text,x,y,maxW,lineH) {
   ctx.fillText(words.slice(0,mid).join(' '),x,y-lineH/2); ctx.fillText(words.slice(mid).join(' '),x,y+lineH/2);
 }
 
+// Build identity + platform node positions for the export when there's no live
+// desktop layout to reuse (i.e. on mobile). Circles sit on a ring; how far each
+// identity sits from the center reflects its self-reported overlap, so the
+// picture roughly mirrors the user's answers.
+function layoutForExport(W, H) {
+  const cx=W/2, cy=H/2, n=selectedIdentities.length;
+  const idSpread=Math.min(W,H)*0.20;
+  const importanceRadius={ low:22, medium:38, high:54 };
+  const overlapPull={ low:1.2, medium:0.95, high:0.62 };
+  const nodes=selectedIdentities.map((id,i)=>{
+    const ov=mobileOverlap[id.label] || 'medium';
+    const dist=idSpread*(overlapPull[ov] ?? 0.95);
+    return { label:id.label, color:id.color,
+      x: cx + dist*Math.cos((2*Math.PI*i/n)-Math.PI/2),
+      y: cy + dist*Math.sin((2*Math.PI*i/n)-Math.PI/2),
+      r: importanceRadius[identityImportance[id.label] || 'medium'] };
+  });
+  const active=PLATFORMS.filter(p=>selectedPlatforms.includes(p.id));
+  const m=active.length, platSpread=Math.min(W*0.43,H*0.43);
+  const plats=active.map((p,i)=>({ id:p.id, name:p.name, icon:p.icon,
+    x: cx + platSpread*Math.cos((2*Math.PI*i/m)-Math.PI/2),
+    y: cy + platSpread*Math.sin((2*Math.PI*i/m)-Math.PI/2), r:22 }));
+  return { nodes, plats };
+}
+
+// Save the map as a branded PNG with the tool's URL stamped on it.
+function exportMap() {
+  if (selectedIdentities.length === 0) { alert('Add a few identities first, then save your map.'); return; }
+  const MAP_W=660, MAP_H=520;
+  // 1) Render just the map onto an intermediate canvas.
+  const mc=document.createElement('canvas'); mc.width=MAP_W; mc.height=MAP_H;
+  const mctx=mc.getContext('2d');
+  mctx.fillStyle='#fffdf9'; mctx.fillRect(0,0,MAP_W,MAP_H);
+  const live=document.getElementById('mapCanvas');
+  if (!isMobile() && identityNodes.length && live && live.width) {
+    mctx.drawImage(live, 0, 0, MAP_W, MAP_H); // faithful to the user's dragged layout
+  } else {
+    const { nodes, plats }=layoutForExport(MAP_W, MAP_H);
+    paintMap(mctx, nodes, plats);
+  }
+  // 2) Compose the branded image (title, score, map, URL footer).
+  const scale=2, W=720, H=732, pad=30;
+  const out=document.createElement('canvas'); out.width=W*scale; out.height=H*scale;
+  const ctx=out.getContext('2d'); ctx.scale(scale,scale);
+  ctx.fillStyle='#f7f4ef'; ctx.fillRect(0,0,W,H);
+  ctx.textAlign='center';
+  ctx.fillStyle='#1c1917'; ctx.font='600 27px Georgia, serif';
+  ctx.fillText('My Identity Map', W/2, 46);
+  ctx.fillStyle='#57534e'; ctx.font='14px system-ui, sans-serif';
+  ctx.fillText('Learn how the groups we belong to shape what we believe', W/2, 72);
+  // Complexity score pill.
+  const sc=computeScore();
+  const pillTxt=`Complexity ${sc.score}/100 · ${sc.level}`;
+  ctx.font='600 14px system-ui, sans-serif';
+  const pillW=ctx.measureText(pillTxt).width+34, pillH=28, px=(W-pillW)/2, py=88;
+  ctx.beginPath(); ctx.roundRect(px,py,pillW,pillH,14);
+  ctx.fillStyle=sc.color+'22'; ctx.fill(); ctx.strokeStyle=sc.color; ctx.lineWidth=1.5; ctx.stroke();
+  ctx.fillStyle=sc.color; ctx.textBaseline='middle'; ctx.fillText(pillTxt, W/2, py+pillH/2+1); ctx.textBaseline='alphabetic';
+  const mapY=134, drawW=W-2*pad, drawH=drawW*(MAP_H/MAP_W);
+  ctx.drawImage(mc, pad, mapY, drawW, drawH);
+  const fy=mapY+drawH+30;
+  ctx.fillStyle='#57534e'; ctx.font='14px system-ui, sans-serif';
+  ctx.fillText('Make your own identity map at', W/2, fy);
+  ctx.fillStyle='#c2410c'; ctx.font='600 16px system-ui, sans-serif';
+  ctx.fillText(MAP_URL, W/2, fy+24);
+  // 3) Trigger the download.
+  const a=document.createElement('a');
+  a.download='my-identity-map.png';
+  a.href=out.toDataURL('image/png');
+  document.body.appendChild(a); a.click(); a.remove();
+}
+
 function updateMeters() {
+  const IMP_WEIGHTS = { low: 1, medium: 2, high: 3 };
   let rawOverlap=0;
   if (identityNodes.length>=2) {
-    let sum=0,pairs=0;
-    for (let i=0;i<identityNodes.length;i++) for (let j=i+1;j<identityNodes.length;j++) { pairs++; const d=Math.hypot(identityNodes[i].x-identityNodes[j].x,identityNodes[i].y-identityNodes[j].y), sr=identityNodes[i].r+identityNodes[j].r; sum+=Math.max(0,1-d/sr); }
-    rawOverlap=Math.round(sum/pairs*100);
+    let wSum=0,wTotal=0;
+    for (let i=0;i<identityNodes.length;i++) for (let j=i+1;j<identityNodes.length;j++) {
+      const d=Math.hypot(identityNodes[i].x-identityNodes[j].x,identityNodes[i].y-identityNodes[j].y), sr=identityNodes[i].r+identityNodes[j].r;
+      const avgImp=(IMP_WEIGHTS[identityImportance[identityNodes[i].label]||'medium']+IMP_WEIGHTS[identityImportance[identityNodes[j].label]||'medium'])/2;
+      wSum+=Math.max(0,1-d/sr)*avgImp; wTotal+=avgImp;
+    }
+    rawOverlap=wTotal>0?Math.round(wSum/wTotal*100):0;
   }
   const strengthBonus={light:5,moderate:12,heavy:20}; let feedBonus=0; const tally={};let total=0;
   platformNodes.forEach(pn=>{ const conn=platformConnections[pn.id]||{targets:[],strength:'moderate',markedNone:false}; if(conn.markedNone||conn.targets.length===0)return; const bonus=strengthBonus[conn.strength]||12; conn.targets.forEach(t=>{tally[t]=(tally[t]||0)+1;total++;feedBonus+=bonus/conn.targets.length;}); });
@@ -753,15 +892,112 @@ function moveDrag(x,y,canvas) {
   n.x=Math.max(n.r,Math.min(canvasW-n.r,x-dragOffX)); n.y=Math.max(n.r,Math.min(canvasH-n.r,y-dragOffY));
 }
 
-function buildReflect() {
-  cancelAnimationFrame(animFrame);
-  const idComplexity=100-overlapPct, feedPenalty=feedConcPct*0.5, score=Math.max(0,Math.round(idComplexity-feedPenalty));
-  let level,color,desc;
+// Returns { count, bonus } where count is the number of distinct identity clusters
+// and bonus is the cluster diversity bonus (+5 per cluster beyond the first, capped at +25).
+// Desktop: two identities are in the same cluster when their circles overlap by >15%.
+// Mobile: 'medium'/'high' identities group into one cluster; each 'low' is its own cluster.
+function computeClusters() {
+  const n = selectedIdentities.length;
+  if (n <= 1) return { count: Math.max(1, n), bonus: 0 };
+  const parent = Array.from({length: n}, (_, i) => i);
+  function find(x) { return parent[x] === x ? x : (parent[x] = find(parent[x])); }
+  function union(a, b) { parent[find(a)] = find(b); }
+  if (!isMobile() && identityNodes.length === n) {
+    for (let i = 0; i < n; i++) for (let j = i+1; j < n; j++) {
+      const a = identityNodes[i], b = identityNodes[j];
+      if (Math.max(0, 1 - Math.hypot(a.x-b.x, a.y-b.y) / (a.r+b.r)) > 0.15) union(i, j);
+    }
+  } else {
+    const hi = selectedIdentities.map((id, i) => ({i, lv: mobileOverlap[id.label] || 'medium'})).filter(x => x.lv !== 'low');
+    for (let k = 1; k < hi.length; k++) union(hi[0].i, hi[k].i);
+  }
+  const count = new Set(selectedIdentities.map((_, i) => find(i))).size;
+  const bonus = Math.min(25, (count - 1) * 5);
+  return { count, bonus };
+}
+
+// --- Political entanglement -------------------------------------------------
+// Measures how much the user's political identity overlaps with their
+// NON-political identities. This captures the "political mega-identity" pattern
+// (Mason, 2018): the bias risk isn't which identities clash, it's how far a
+// political lens spreads across the rest of someone's map. Symmetric by design
+// (treats every ideology the same), so it never takes a partisan side.
+// Returns { hasPolitical, pct, level } where pct is 0-100 and level is
+// 'high' | 'moderate' | 'low'. To change which identities count as political,
+// edit the 'Politics' category in IDENTITY_CATS above.
+function computePoliticalEntanglement() {
+  // Detect political identities by the category they came from, not by a fixed
+  // label list, so custom and international political identities (anything added
+  // under the Politics category) are recognized too.
+  const polIdx = [], nonPolIdx = [];
+  selectedIdentities.forEach((id, i) => { (id.cat === 'Politics' ? polIdx : nonPolIdx).push(i); });
+  // Need at least one political AND one non-political identity to measure spread.
+  if (polIdx.length === 0 || nonPolIdx.length === 0) return { hasPolitical: false, pct: 0, level: 'low' };
+
+  let pct;
+  if (!isMobile() && identityNodes.length === selectedIdentities.length) {
+    // Desktop: average the geometric overlap between each political circle and
+    // each non-political circle (same overlap formula used for clustering).
+    let sum = 0, cnt = 0;
+    polIdx.forEach(p => nonPolIdx.forEach(q => {
+      const a = identityNodes[p], b = identityNodes[q];
+      sum += Math.max(0, 1 - Math.hypot(a.x - b.x, a.y - b.y) / (a.r + b.r));
+      cnt++;
+    }));
+    pct = cnt ? Math.round((sum / cnt) * 100) : 0;
+  } else {
+    // Mobile: no pairwise data exists, so use the political identity's own
+    // self-reported overlap level as a proxy (low=0, medium=35, high=70).
+    const vals = { low: 0, medium: 35, high: 70 };
+    let sum = 0;
+    polIdx.forEach(p => { sum += vals[mobileOverlap[selectedIdentities[p].label] || 'medium'] ?? 35; });
+    pct = Math.round(sum / polIdx.length);
+  }
+  const level = pct >= 50 ? 'high' : pct >= 25 ? 'moderate' : 'low';
+  return { hasPolitical: true, pct, level };
+}
+
+// Computes the complexity score from current overlap, feed amplification, and the
+// cluster bonus. Used by both the results panel and the saved image so they agree.
+// Feed amplification penalizes via two channels: (1) feedBonus is merged into
+// overlapPct in updateMeters/updateMobileMeters; (2) feedPenalty = feedConcPct *
+// FEED_WEIGHT is applied here directly. Adjust FEED_WEIGHT (0–1) to rebalance (2).
+function computeScore() {
+  const FEED_WEIGHT = 0.5;
+  const { bonus: clusterBonus } = computeClusters();
+  const idComplexity = 100 - overlapPct, feedPenalty = feedConcPct * FEED_WEIGHT;
+  const score = Math.min(100, Math.max(0, Math.round(idComplexity - feedPenalty + clusterBonus)));
+  let level, color, desc;
   if(score>=75){level='Very Complex';color='#15803d';desc='Your identities span diverse communities, and your feeds don\'t heavily amplify any single one. This gives you more natural resistance to targeted misinformation — it\'s harder to have your full identity profile exploited when your communities are genuinely distinct.';}
   else if(score>=50){level='Mostly Complex';color='#2563eb';desc='You have a reasonable mix of identities, though some still overlap. Certain misinformation may find more traction depending on which identity your feeds emphasize most. Some built-in resistance exists, but staying aware of your feed patterns matters.';}
   else if(score>=30){level='Partially Complex';color='#b45309';desc='Many of your identities overlap, and your feeds may emphasize certain ones more than others. You may be more vulnerable to misinformation that targets those emphasized identities — particularly content that feels personally relevant or confirms what you already believe.';}
   else{level='Less Complex';color='#c2410c';desc='Your identities cluster tightly together, and your feeds reinforce the same groups. This makes you more likely to encounter misinformation that feels validated from multiple directions at once — content designed to resonate with people whose identities look a lot like yours.';}
-  document.getElementById('reflect-score').innerHTML=`<div class="score-card"><div class="score-big" style="color:${color}">${score}</div><div><div class="score-meta-lbl">Complexity Score</div><div class="score-level" style="color:${color}">${level}</div><div class="score-desc">${desc}</div></div></div><p style="font-size:12px;color:var(--ink-light);font-style:italic;margin-bottom:20px;line-height:1.6;">This score reflects identity overlap and feed amplification only — not a diagnostic.</p>`;
+  return { score, level, color, desc };
+}
+
+function buildReflect() {
+  cancelAnimationFrame(animFrame);
+  const {count: clusterCount, bonus: clusterBonus} = computeClusters();
+  const { score, level, color, desc } = computeScore();
+  const clusterNote = clusterCount === 1
+    ? 'All your identities form one cluster. More distinct, separate clusters would raise your score.'
+    : `You have <strong style="color:var(--ink)">${clusterCount} distinct identity clusters</strong> — that's a key part of what's driving your score, earning a <strong style="color:var(--ink)">+${clusterBonus}-pt cluster bonus</strong>.`;
+  // Political entanglement callout: surfaces how far a political lens spreads
+  // across the rest of the map. Reflection only, it does not change the score.
+  const pol = computePoliticalEntanglement();
+  let polBox = '';
+  if (pol.hasPolitical) {
+    let polNote;
+    if (pol.level === 'high') {
+      polNote = 'Your political identity overlaps heavily with most of your other identities. Political identity is one of the strongest filters for how we process information, so when it colors many other parts of life at once, it can quietly shape what feels true across the board, making it harder to weigh claims on their own merits.';
+    } else if (pol.level === 'moderate') {
+      polNote = "Your political identity overlaps with some of your other identities. Political identity tends to be a powerful filter for how we process information, so it's worth noticing where it's bleeding into other parts of your life, and whether that's shaping what you accept or reject.";
+    } else {
+      polNote = "Your political identity sits relatively apart from your other identities. That can be protective: when politics isn't coloring everything else, you're more able to weigh information outside a single partisan lens.";
+    }
+    polBox = `<div style="padding:12px 16px;border:1px solid var(--rule);border-left:3px solid #c2410c;border-radius:8px;background:var(--paper);margin:0 0 12px;font-size:13px;color:var(--ink-mid);line-height:1.7;"><div style="font-size:10px;font-weight:600;letter-spacing:0.13em;text-transform:uppercase;color:var(--ink-light);margin-bottom:6px;">Political identity</div>${polNote}</div>`;
+  }
+  document.getElementById('reflect-score').innerHTML=`<div class="score-card"><div class="score-big" style="color:${color}">${score}</div><div><div class="score-meta-lbl">Complexity Score</div><div class="score-level" style="color:${color}">${level}</div><div class="score-desc">${desc}</div></div></div><div style="padding:12px 16px;border:1px solid var(--rule);border-radius:8px;background:var(--paper);margin:0 0 12px;font-size:13px;color:var(--ink-mid);line-height:1.7;">${clusterNote}</div>${polBox}<p style="font-size:12px;color:var(--ink-light);font-style:italic;margin-bottom:20px;line-height:1.6;">This score reflects identity overlap, cluster diversity, and feed amplification — not a diagnostic.</p>`;
   const tally={};let totalArrows=0;
   platformNodes.forEach(pn=>{ const conn=platformConnections[pn.id]||{targets:[],strength:'moderate',markedNone:false}; if(conn.markedNone)return; conn.targets.forEach(t=>{tally[t]=(tally[t]||0)+1;totalArrows++;}); });
   let ampHtml='<div class="amp-label">How Your Feeds Amplify Your Identities</div>';
