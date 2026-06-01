@@ -361,12 +361,22 @@ const IDENTITY_CATS = [
   { name: 'Work & Role', color: '#b45309', items: ['Healthcare worker', 'Teacher / educator', 'Scientist / researcher', 'Journalist / media', 'Tradesperson', 'Military / law enforcement', 'Business owner', 'Student', 'Stay-at-home parent', 'Retired']},
   { name: 'Family', color: '#be185d', items: ['Parent', 'Grandparent', 'Spouse / Partner', 'Caregiver', 'Homeschool family', 'Traditional family values', 'Multigenerational household', 'Military family', 'Single parent', 'Childfree']},
   { name: 'How I Think', color: '#0891b2', items: ['Skeptic', 'Cynic', 'Optimist', 'Pragmatist', 'Traditionalist', 'Idealist', 'Scientific', 'Intuitive']},
-  { name: 'Interests & Lifestyle', color: '#65a30d', items: ['Fitness enthusiast', 'Sports fan / player', 'Gamer', 'Self-improvement', 'Clean eating / nutrition', 'Wellness community', 'Public health supporter', 'Environmentalist', 'LGBTQ+ community', 'Gun owner', 'Finance community', 'True crime follower', 'Faith community member', 'Neighborhood organizer']},
+  { name: 'Interests & Lifestyle', color: '#65a30d', items: ['Fitness enthusiast', 'Sports fan / player', 'Gamer', 'Self-improvement', 'Clean eating / nutrition', 'Wellness community', 'Environmentalist', 'LGBTQ+ community', 'Gun owner', 'Finance community', 'True crime follower', 'Faith community member', 'Neighborhood organizer']},
   { name: 'Other Identities', color: '#6b7280', items: [], note: 'Some of the most important identities aren\'t listed above, including race, ethnicity, disability, gender identity, sexuality, and others that may be central to how you see yourself and move through the world. Add any that feel significant to you below.' },
 ];
 
 // The public URL stamped onto saved map images. Edit this to match where you deploy the tool.
 const MAP_URL = 'matthewfacciani.github.io/identity-map';
+
+// How strongly identity overlap lowers the complexity score. 1.0 = raw geometry,
+// where you have to drag circles nearly on top of each other to register much.
+// Higher values make partial, realistic overlaps count more. Applies to both
+// desktop (dragged circles) and mobile (self-reported overlap) so the two stay aligned.
+const OVERLAP_SENSITIVITY = 1.05;
+
+// Escape user-entered text (custom identity labels) before putting it in innerHTML,
+// so labels containing quotes, apostrophes, or < > can't break rendering or inject markup.
+function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 const PLATFORMS = [
   { id:'twitter', name:'Twitter / X', icon:'𝕏' },
@@ -411,9 +421,11 @@ function buildPanel1() {
     addBtn.className = 'custom-add'; addBtn.textContent = '+ Add';
     addBtn.onclick = () => {
       const v = inp.value.trim(); if (!v) return;
+      const exists = selectedIdentities.find(x => x.label === v);
+      if (!exists && selectedIdentities.length >= 15) { inp.value = ''; return; }
       const c2 = createChip(v, cat.color, true, () => toggleIdentity(v, cat.color, c2, cat.name));
       chipsDiv.appendChild(c2);
-      if (!selectedIdentities.find(x => x.label === v)) toggleIdentity(v, cat.color, c2, cat.name);
+      if (!exists) toggleIdentity(v, cat.color, c2, cat.name);
       inp.value = '';
     };
     inp.onkeydown = e => { if (e.key === 'Enter') addBtn.click(); };
@@ -459,12 +471,13 @@ function buildImportancePanel() {
     const row = document.createElement('div');
     row.className = 'importance-row';
     row.innerHTML = `
-      <div class="importance-identity"><div class="importance-dot" style="background:${id.color}"></div><span class="importance-label">${id.label}</span></div>
+      <div class="importance-identity"><div class="importance-dot" style="background:${id.color}"></div><span class="importance-label">${esc(id.label)}</span></div>
       <div class="importance-btns">
-        <button class="imp-btn${cur==='low'?' sel':''}" style="${cur==='low'?'background:'+id.color:'color:'+id.color}" title="Low" onclick="setImportance('${id.label}','low','${id.color}',this)"><span class="circle-s" style="background:${cur==='low'?'white':id.color}"></span></button>
-        <button class="imp-btn${cur==='medium'?' sel':''}" style="${cur==='medium'?'background:'+id.color:'color:'+id.color}" title="Medium" onclick="setImportance('${id.label}','medium','${id.color}',this)"><span class="circle-m" style="background:${cur==='medium'?'white':id.color}"></span></button>
-        <button class="imp-btn${cur==='high'?' sel':''}" style="${cur==='high'?'background:'+id.color:'color:'+id.color}" title="High" onclick="setImportance('${id.label}','high','${id.color}',this)"><span class="circle-l" style="background:${cur==='high'?'white':id.color}"></span></button>
+        <button class="imp-btn${cur==='low'?' sel':''}" data-lvl="low" style="${cur==='low'?'background:'+id.color:'color:'+id.color}" title="Low"><span class="circle-s" style="background:${cur==='low'?'white':id.color}"></span></button>
+        <button class="imp-btn${cur==='medium'?' sel':''}" data-lvl="medium" style="${cur==='medium'?'background:'+id.color:'color:'+id.color}" title="Medium"><span class="circle-m" style="background:${cur==='medium'?'white':id.color}"></span></button>
+        <button class="imp-btn${cur==='high'?' sel':''}" data-lvl="high" style="${cur==='high'?'background:'+id.color:'color:'+id.color}" title="High"><span class="circle-l" style="background:${cur==='high'?'white':id.color}"></span></button>
       </div>`;
+    row.querySelectorAll('.imp-btn').forEach(b => b.addEventListener('click', () => setImportance(id.label, b.dataset.lvl, id.color, b)));
     list.appendChild(row);
   });
 }
@@ -563,15 +576,15 @@ function renderPlatformCard(p, container) {
   card.id = 'pcard-' + p.id;
   const isNone = conn.targets.length === 0 && conn.markedNone;
   const noneBtn = `<button class="id-toggle none-toggle${isNone?' sel':''}" data-pid="${p.id}" style="${isNone?'background:#64748b;color:white;border-color:transparent':''}" onclick="markNone('${p.id}',this)">None</button>`;
-  const togglesHtml = noneBtn + selectedIdentities.map(id => {
+  const togglesHtml = noneBtn + selectedIdentities.map((id, i) => {
     const sel = conn.targets.includes(id.label);
-    return `<button class="id-toggle${sel?' sel':''}" data-pid="${p.id}" data-label="${id.label}" style="${sel?`background:${id.color};color:white;border-color:transparent`:''}" onclick="toggleTarget('${p.id}','${id.label}','${id.color}',this)">${id.label}</button>`;
+    return `<button class="id-toggle${sel?' sel':''}" data-pid="${p.id}" data-idx="${i}" style="${sel?`background:${id.color};color:white;border-color:transparent`:''}">${esc(id.label)}</button>`;
   }).join('');
   const mkStrBtn = (s) => `<button class="strength-btn${conn.strength===s?' sel':''}" onclick="setStrength('${p.id}','${s}',this)">${s.charAt(0).toUpperCase()+s.slice(1)}</button>`;
   card.innerHTML = `
     <div class="pc-header" onclick="toggleCard('${p.id}')">
       <span class="pc-icon">${p.icon}</span><span class="pc-name">${p.name}</span>
-      <span class="pc-status${conn.targets.length>0?' done':''}" id="pstatus-${p.id}">${conn.targets.length>0 ? '✓ '+conn.targets.slice(0,2).join(', ')+(conn.targets.length>2?` +${conn.targets.length-2}`:'') : 'tap to configure'}</span>
+      <span class="pc-status${conn.targets.length>0?' done':''}" id="pstatus-${p.id}">${conn.targets.length>0 ? '✓ '+conn.targets.slice(0,2).map(esc).join(', ')+(conn.targets.length>2?` +${conn.targets.length-2}`:'') : 'tap to configure'}</span>
     </div>
     <div class="pc-body" id="pbody-${p.id}">
       <div class="pc-q">Which identities does this feed <strong>mostly reinforce</strong>?</div>
@@ -579,6 +592,10 @@ function renderPlatformCard(p, container) {
       <div class="strength-row"><span class="strength-lbl">Amplification:</span><div class="strength-options">${mkStrBtn('light')}${mkStrBtn('moderate')}${mkStrBtn('heavy')}</div></div>
     </div>`;
   container.appendChild(card);
+  card.querySelectorAll('.id-toggle[data-idx]').forEach(b => {
+    const id = selectedIdentities[+b.dataset.idx];
+    b.addEventListener('click', () => toggleTarget(b.dataset.pid, id.label, id.color, b));
+  });
   if (selectedPlatforms.length === 1) { const body = document.getElementById('pbody-' + p.id); if (body) body.classList.add('open'); }
 }
 
@@ -636,7 +653,8 @@ function buildMobileAltPanel() {
     const cur = mobileOverlap[id.label];
     const row = document.createElement('div');
     row.className = 'canvas-alt-identity';
-    row.innerHTML = `<div class="canvas-alt-dot" style="background:${id.color}"></div><span class="canvas-alt-name">${id.label}</span><div class="canvas-overlap-btns"><button class="cob${cur==='low'?' sel':''}" onclick="setMobileOverlap('${id.label}','low',this)">Separate</button><button class="cob${cur==='medium'?' sel':''}" onclick="setMobileOverlap('${id.label}','medium',this)">Some overlap</button><button class="cob${cur==='high'?' sel':''}" onclick="setMobileOverlap('${id.label}','high',this)">Lots of overlap</button></div>`;
+    row.innerHTML = `<div class="canvas-alt-dot" style="background:${id.color}"></div><span class="canvas-alt-name">${esc(id.label)}</span><div class="canvas-overlap-btns"><button class="cob${cur==='low'?' sel':''}" data-lvl="low">Separate</button><button class="cob${cur==='medium'?' sel':''}" data-lvl="medium">Some overlap</button><button class="cob${cur==='high'?' sel':''}" data-lvl="high">Lots of overlap</button></div>`;
+    row.querySelectorAll('.cob').forEach(b => b.addEventListener('click', () => setMobileOverlap(id.label, b.dataset.lvl, b)));
     list.appendChild(row);
   });
 }
@@ -659,7 +677,7 @@ function updateMobileMeters() {
     weightedSum += overlapVal * imp;
     totalWeight += imp;
   });
-  const raw = totalWeight > 0 ? Math.round(weightedSum / totalWeight) : 0;
+  const raw = totalWeight > 0 ? Math.min(100, Math.round(weightedSum / totalWeight * OVERLAP_SENSITIVITY)) : 0;
   overlapPct = raw;
   const of = document.getElementById('id-overlap-fill');
   of.style.width = raw + '%';
@@ -724,7 +742,7 @@ function buildMap() {
 
 function buildMapLegend() {
   const leg = document.getElementById('map-legend'); leg.innerHTML = '';
-  identityNodes.forEach(n => { const item = document.createElement('div'); item.className = 'legend-item'; item.innerHTML = `<div class="legend-swatch" style="background:${n.color}"></div><span>${n.label}</span>`; leg.appendChild(item); });
+  identityNodes.forEach(n => { const item = document.createElement('div'); item.className = 'legend-item'; item.innerHTML = `<div class="legend-swatch" style="background:${n.color}"></div><span>${esc(n.label)}</span>`; leg.appendChild(item); });
   if (platformNodes.length > 0) { const item = document.createElement('div'); item.className = 'legend-item'; item.innerHTML = `<div class="legend-swatch platform-sq"></div><span>Platform</span>`; leg.appendChild(item); }
 }
 
@@ -871,7 +889,7 @@ function updateMeters() {
       const imp=IMP_WEIGHTS[identityImportance[identityNodes[i].label]||'medium'];
       wSum+=best*imp; wTotal+=imp;
     }
-    rawOverlap=wTotal>0?Math.round(wSum/wTotal*100):0;
+    rawOverlap=wTotal>0?Math.min(100, Math.round(wSum/wTotal*100*OVERLAP_SENSITIVITY)):0;
   }
   const strengthBonus={light:5,moderate:12,heavy:20}; let feedBonus=0; const tally={};let total=0;
   platformNodes.forEach(pn=>{ const conn=platformConnections[pn.id]||{targets:[],strength:'moderate',markedNone:false}; if(conn.markedNone||conn.targets.length===0)return; const bonus=strengthBonus[conn.strength]||12; conn.targets.forEach(t=>{tally[t]=(tally[t]||0)+1;total++;feedBonus+=bonus/conn.targets.length;}); });
@@ -982,7 +1000,7 @@ function categoryEntanglement(catName) {
 // overlapPct in updateMeters/updateMobileMeters; (2) feedPenalty = feedConcPct *
 // FEED_WEIGHT is applied here directly. Adjust FEED_WEIGHT (0–1) to rebalance (2).
 function computeScore() {
-  const FEED_WEIGHT = 0.5;
+  const FEED_WEIGHT = 0.25;
   // Entanglement penalties: a political (or worldview) identity that overlaps
   // with many other identities is its own distinct vulnerability, so it pulls the
   // score down even when the rest of the map looks varied. Politics is weighted
@@ -1041,16 +1059,27 @@ function buildReflect() {
   let ampHtml='<div class="amp-label">How Your Feeds Amplify Your Identities</div>';
   if(!platformNodes.length||!totalArrows) { ampHtml+='<div style="font-size:13px;color:var(--ink-light);font-style:italic">No platform connections configured.</div>'; }
   else {
-    platformNodes.forEach(pn=>{ const c=platformConnections[pn.id]||{targets:[],strength:'moderate',markedNone:false}; const targets=c.markedNone?'<em style="color:#15803d">diverse</em>':c.targets.length?c.targets.join(', '):'<em style="color:var(--ink-light)">not configured</em>'; ampHtml+=`<div class="amp-row"><span class="amp-platform">${pn.icon} ${pn.name.split('/')[0].trim()}</span><span class="amp-arrow">→</span><span class="amp-targets">${targets}${c.markedNone?'':'<span class="amp-strength">'+c.strength+'</span>'}</span></div>`; });
+    platformNodes.forEach(pn=>{ const c=platformConnections[pn.id]||{targets:[],strength:'moderate',markedNone:false}; const targets=c.markedNone?'<em style="color:#15803d">diverse</em>':c.targets.length?c.targets.map(esc).join(', '):'<em style="color:var(--ink-light)">not configured</em>'; ampHtml+=`<div class="amp-row"><span class="amp-platform">${pn.icon} ${esc(pn.name.split('/')[0].trim())}</span><span class="amp-arrow">→</span><span class="amp-targets">${targets}${c.markedNone?'':'<span class="amp-strength">'+c.strength+'</span>'}</span></div>`; });
     const top=Object.entries(tally).sort((a,b)=>b[1]-a[1])[0];
-    ampHtml+=`<div class="top-amplified"><strong style="color:var(--ink)">"${top[0]}"</strong> is your most-amplified identity, reinforced by ${top[1]} of your ${platformNodes.length} feed${platformNodes.length>1?'s':''}.</div>`;
+    ampHtml+=`<div class="top-amplified"><strong style="color:var(--ink)">"${esc(top[0])}"</strong> is your most-amplified identity, reinforced by ${top[1]} of your ${platformNodes.length} feed${platformNodes.length>1?'s':''}.</div>`;
   }
   document.getElementById('amplifier-callout').innerHTML=ampHtml;
-  const topId=Object.entries(tally).sort((a,b)=>b[1]-a[1])[0]?.[0]||'your main identity';
+  const topEntry = Object.entries(tally).sort((a,b)=>b[1]-a[1])[0];
+  let q1;
+  if (topEntry) {
+    q1 = `Your feeds amplify "${esc(topEntry[0])}" more than any of your other identities. Does content that supports it feel automatically true, while content that challenges it feels wrong? What might you be accepting without a second look?`;
+  } else {
+    // No feed data (no platforms, or none marked as amplified): use the identity
+    // the user rated most important rather than inventing a feed influence.
+    const ord = { high: 3, medium: 2, low: 1 };
+    const main = [...selectedIdentities].sort((a,b)=>(ord[identityImportance[b.label]||'medium'])-(ord[identityImportance[a.label]||'medium']))[0];
+    const mainLabel = main ? main.label : 'your most important identity';
+    q1 = `Think about the identity that matters most to you, like "${esc(mainLabel)}". Does content that supports it feel automatically true, while content that challenges it feels wrong? What might you be accepting without a second look?`;
+  }
   const qs=[
-    {q:`Your feeds most heavily amplify "${topId}." When you see content that supports this identity, does it just feel right in a way that content challenging it doesn't? What might you be letting through unchecked, and why might you believe one argument over another?`,ph:'Think about how you react differently to content that confirms vs. challenges this identity...'},
-    {q:'Look at two identities on your map that sometimes clash. When your feed forces you to choose between them, which one usually wins, and what happens to the other part of you?',ph:'e.g. My identity as a parent and my political identity sometimes clash when I see certain posts...'},
-    {q:'Is there an identity on your map you could engage with more, online or offline, that might give you a genuinely different perspective? Or is there a community or group you\'ve never really identified with that might be worth exploring? What\'s one concrete step you could take this week to expand your map?',ph:'e.g. I could join a local group, follow new accounts, or have a conversation with someone who...'},
+    {q:q1,ph:'Think about how you react differently to content that confirms vs. challenges this identity...'},
+    {q:'Pick two identities on your map that sometimes pull in different directions. When you have to take a side, which one usually wins?',ph:'e.g. My identity as a parent and my political identity sometimes clash when I see certain posts...'},
+    {q:'Is there an identity, group, or community you could spend more time with that would give you a different perspective? What is one small step you could take this week?',ph:'e.g. I could join a local group, follow new accounts, or have a conversation with someone who...'},
   ];
   const qContainer=document.getElementById('reflect-qs');
   qContainer.innerHTML='<div class="ws-eyebrow" style="margin-bottom:16px">Reflection Questions</div>';
