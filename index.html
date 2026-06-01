@@ -219,7 +219,7 @@ canvas#mapCanvas { display: block; width: 100%; }
   </div>
 </div>
 <div style="margin-top:14px;padding:12px 16px;border:1px solid var(--rule);border-radius:6px;background:var(--paper);font-size:12px;color:var(--ink-light);line-height:1.6;">
-  <strong style="color:var(--ink-mid)">For reflection and educational purposes only.</strong> The percentages and scores in your results are rough estimates meant to help you visualize how your identities interact — not precise measurements. Think of your identity map as a mirror, not a diagnostic tool.
+  <strong style="color:var(--ink-mid)">For reflection and educational purposes only.</strong> The percentages and scores in your results are rough estimates meant to help you visualize how your identities interact, not precise measurements. Think of your identity map as a mirror, not a diagnostic tool.
 </div>
 <div style="height:28px"></div>
 
@@ -238,14 +238,14 @@ canvas#mapCanvas { display: block; width: 100%; }
 <!-- PANEL 1 -->
 <div class="panel active" id="panel1">
   <div class="section-title">Which groups do you belong to?</div>
-  <p class="section-body">We all identify with certain groups: political, professional, religious, geographical, interest-based. Which ones feel true to you? Select at least three from the categories below, or add your own. Focus on identities that feel genuinely important to you — ones that shape how you see the world.</p>
+  <p class="section-body">We all identify with certain groups, political, professional, religious, geographical, interest-based. Which ones feel true to you? Select at least three from the categories below, or add your own. Focus on identities that feel genuinely important to you, ones that shape how you see the world.</p>
   <p class="section-body" style="font-size:13px;font-style:italic;color:var(--ink-light);">A note for readers outside the US: some preset options lean toward a US context. The "Add your own" field under each category is there so you can describe yourself in your own terms.</p>
   <div id="id-categories"></div>
   <div class="tally-bar">
     <span class="tally-txt">Identities selected</span>
     <span class="tally-num" id="id-tally">0</span>
   </div>
-  <div id="id-cap-msg" style="display:none;font-size:12px;color:#b45309;font-style:italic;padding:6px 2px 0;line-height:1.5;">You've selected 15 identities — consider which ones matter most to you.</div>
+  <div id="id-cap-msg" style="display:none;font-size:12px;color:#b45309;font-style:italic;padding:6px 2px 0;line-height:1.5;">You've selected 15 identities, consider which ones matter most to you.</div>
   <div class="btn-row">
     <button class="btn btn-dark" id="to-p2" disabled>Next: Rate Importance →</button>
   </div>
@@ -254,8 +254,8 @@ canvas#mapCanvas { display: block; width: 100%; }
 <!-- PANEL 2 -->
 <div class="panel" id="panel2">
   <div class="section-title">How important is each identity to you?</div>
-  <p class="section-body">Now, rate how important each identity is to you: how central does it feel to your sense of self? Your answers will determine how large each identity appears on your map — larger circles mean that identity matters more to you.</p>
-  <div class="hint-box">💡 Think about which identities you'd feel most lost without. Some may matter but feel more situational. Save the largest circle for identities that genuinely define you.</div>
+  <p class="section-body">Now, rate how important each identity is to you: how central does it feel to your sense of self? Your answers will determine how large each identity appears on your map, larger circles mean that identity matters more to you.</p>
+  <div class="hint-box">💡 Think about which identities you'd feel most lost without. Some may matter but feel more situational, save the largest circle for identities that genuinely define you.</div>
   <div id="importance-list"></div>
   <div class="btn-row">
     <button class="btn btn-ghost" onclick="goTo(1)">← Back</button>
@@ -290,7 +290,7 @@ canvas#mapCanvas { display: block; width: 100%; }
 
   <div class="canvas-alt-panel" id="canvas-alt-panel">
     <div class="canvas-alt-title">How much do your identities overlap?</div>
-    <p style="font-size:13px;color:var(--ink-mid);margin-bottom:14px;line-height:1.6;">Use the buttons below to rate how much each identity overlaps with your others. Think about shared communities, values, and information sources — the more two identities have in common, the higher the overlap.</p>
+    <p style="font-size:13px;color:var(--ink-mid);margin-bottom:14px;line-height:1.6;">Use the buttons below to rate how much each identity overlaps with your others. Think about shared communities, values, and information sources, the more two identities have in common, the higher the overlap.</p>
     <div id="canvas-alt-list"></div>
   </div>
 
@@ -315,7 +315,7 @@ canvas#mapCanvas { display: block; width: 100%; }
   </div>
   <div class="btn-row">
     <button class="btn btn-ghost" onclick="goTo(3)">← Back</button>
-    <button class="btn btn-dark" onclick="goTo(5)">Reflect on My Map →</button>
+    <button class="btn btn-dark" onclick="goTo(5)">See My Complexity Score →</button>
   </div>
 </div>
 
@@ -325,13 +325,13 @@ canvas#mapCanvas { display: block; width: 100%; }
   <div id="reflect-score"></div>
   <div class="amplifier-callout" id="amplifier-callout"></div>
   <div class="research-callout">
-    <div class="rc-eyebrow">Evidence-Based Insights — Roccas &amp; Brewer (2002)</div>
-    <p class="rc-text">This exercise is grounded in research on social identity complexity — the degree to which your group memberships overlap. When your identities cluster together, sharing the same communities, values, and information sources, your identity map is less complex. When they are more distinct, your map is more complex. Research suggests that people with more complex identity maps tend to show greater tolerance toward outgroups and reduced ingroup bias. This exercise applies that insight to how we consume information — the more our identities cluster together, the more we may unconsciously favor information that confirms them.<br><br>Social media adds another layer: algorithms <strong>actively amplify certain identities</strong>, quietly shaping which version of you gets reinforced online. Your susceptibility to misinformation isn't only about who you are — it's about which version of yourself your feeds constantly reflect back to you.</p>
+    <div class="rc-eyebrow">Evidence-Based Insights · Roccas &amp; Brewer (2002)</div>
+    <p class="rc-text">This exercise is grounded in research on social identity complexity, the degree to which your group memberships overlap. When your identities cluster together, sharing the same communities, values, and information sources, your identity map is less complex. When they are more distinct, your map is more complex. Research suggests that people with more complex identity maps tend to show greater tolerance toward outgroups and reduced ingroup bias. This exercise applies that insight to how we consume information, the more our identities cluster together, the more we may unconsciously favor information that confirms them.<br><br>Social media adds another layer: algorithms <strong>actively amplify certain identities</strong>, quietly shaping which version of you gets reinforced online. Your susceptibility to misinformation isn't only about who you are, it's about which version of yourself your feeds constantly reflect back to you.</p>
   </div>
   <div id="reflect-qs"></div>
   <div class="restart-row">
     <button class="btn btn-dark" onclick="exportReflections()">📋 Copy My Responses</button>
-    <button class="btn btn-share btn" onclick="exportMap()">↓ Save My Map</button>
+    <button class="btn btn-share btn" onclick="exportMap()">↓ Save My Map and Score</button>
     <button class="btn btn-share btn" onclick="shareScore()">🔗 Share My Score</button>
     <button class="btn btn-ghost" onclick="goTo(4)">← Back to Map</button>
     <button class="btn btn-ghost" onclick="restart()">↺ Start Over</button>
@@ -357,13 +357,12 @@ canvas#mapCanvas { display: block; width: 100%; }
 const IDENTITY_CATS = [
   { name: 'Politics', color: '#c2410c', items: ['Left-leaning', 'Centrist', 'Right-leaning', 'Libertarian', 'Politically independent', 'Activist', 'Politically disengaged']},
   { name: 'Religion & Worldview', color: '#0369a1', items: ['Evangelical Christian', 'Catholic', 'Protestant', 'Jewish', 'Muslim', 'Hindu', 'Buddhist', 'Spiritual but not religious', 'Atheist / agnostic']},
-  { name: 'Where I Live', color: '#15803d', items: ['Rural', 'Small town', 'Suburban', 'Urban', 'Immigrant / newcomer', 'Military community']},
-  { name: 'Health & Wellness', color: '#7c3aed', items: ['Fitness enthusiast', 'Recreational sports', 'Clean eating / natural foods', 'Holistic health advocate', 'Wellness community', 'Public health supporter']},
+  { name: 'Place & Belonging', color: '#15803d', items: ['Rural', 'Small town', 'Suburban', 'Urban', 'Military community', 'Bicultural / multicultural', 'Immigrant / first-generation', 'Diaspora', 'Indigenous'], note: 'Where you live and where you feel you belong. There is no preset list of countries, so add your nationality or culture below, for example American, Danish, or Nigerian.', placeholder: 'Your nationality or culture…'},
   { name: 'Work & Role', color: '#b45309', items: ['Healthcare worker', 'Teacher / educator', 'Scientist / researcher', 'Journalist / media', 'Tradesperson', 'Military / law enforcement', 'Business owner', 'Student', 'Stay-at-home parent', 'Retired']},
   { name: 'Family', color: '#be185d', items: ['Parent', 'Grandparent', 'Spouse / Partner', 'Caregiver', 'Homeschool family', 'Traditional family values', 'Multigenerational household', 'Military family', 'Single parent', 'Childfree']},
-  { name: 'How I Think', color: '#0891b2', items: ['Skeptic', 'Cynic', 'Optimist', 'Pragmatist', 'Traditionalist', 'Idealist']},
-  { name: 'Interests & Community', color: '#65a30d', items: ['Gun owner', 'Environmentalist', 'Finance community', 'Self-reliance community', 'LGBTQ+ community', 'Sports fan', 'Gamer', 'True crime follower', 'Diet / nutrition community', 'Self-improvement', 'Faith community member', 'Neighborhood organizer']},
-  { name: 'Other Identities', color: '#6b7280', items: [], note: 'Some of the most important identities aren\'t listed above — including race, ethnicity, nationality, disability, gender identity, sexuality, and others that may be central to how you see yourself and move through the world. Add any that feel significant to you below.' },
+  { name: 'How I Think', color: '#0891b2', items: ['Skeptic', 'Cynic', 'Optimist', 'Pragmatist', 'Traditionalist', 'Idealist', 'Scientific', 'Intuitive']},
+  { name: 'Interests & Lifestyle', color: '#65a30d', items: ['Fitness enthusiast', 'Sports fan / player', 'Gamer', 'Self-improvement', 'Clean eating / nutrition', 'Wellness community', 'Public health supporter', 'Environmentalist', 'LGBTQ+ community', 'Gun owner', 'Finance community', 'True crime follower', 'Faith community member', 'Neighborhood organizer']},
+  { name: 'Other Identities', color: '#6b7280', items: [], note: 'Some of the most important identities aren\'t listed above, including race, ethnicity, disability, gender identity, sexuality, and others that may be central to how you see yourself and move through the world. Add any that feel significant to you below.' },
 ];
 
 // The public URL stamped onto saved map images. Edit this to match where you deploy the tool.
@@ -407,7 +406,7 @@ function buildPanel1() {
     const row = document.createElement('div');
     row.className = 'custom-row';
     const inp = document.createElement('input');
-    inp.className = 'custom-input'; inp.placeholder = 'Add your own…';
+    inp.className = 'custom-input'; inp.placeholder = cat.placeholder || 'Add your own…';
     const addBtn = document.createElement('button');
     addBtn.className = 'custom-add'; addBtn.textContent = '+ Add';
     addBtn.onclick = () => {
@@ -621,7 +620,13 @@ function refreshPlatformStatus(pid) {
   else { el.className = 'pc-status'; el.textContent = 'no identity selected'; if (card) card.classList.remove('complete'); }
 }
 
-function updateP3Btn() { document.getElementById('to-p4').disabled = selectedPlatforms.length === 0; }
+function updateP3Btn() {
+  // Platforms are optional: someone may not use social media at all. Always allow
+  // continuing, and make the button say so clearly when nothing is selected.
+  const b = document.getElementById('to-p4');
+  b.disabled = false;
+  b.textContent = selectedPlatforms.length === 0 ? "I don't use social media →" : 'Next: See the Map →';
+}
 
 function buildMobileAltPanel() {
   const list = document.getElementById('canvas-alt-list');
@@ -659,7 +664,7 @@ function updateMobileMeters() {
   const of = document.getElementById('id-overlap-fill');
   of.style.width = raw + '%';
   of.style.background = raw > 60 ? '#c2410c' : raw > 30 ? '#b45309' : '#15803d';
-  document.getElementById('id-overlap-lbl').textContent = `${raw}% — ${raw > 60 ? 'tightly clustered' : raw > 30 ? 'moderate overlap' : 'distinct'}`;
+  document.getElementById('id-overlap-lbl').textContent = `${raw}% · ${raw > 60 ? 'tightly clustered' : raw > 30 ? 'moderate overlap' : 'distinct'}`;
 }
 
 function computeFeedConc() {
@@ -850,11 +855,21 @@ function updateMeters() {
   const IMP_WEIGHTS = { low: 1, medium: 2, high: 3 };
   let rawOverlap=0;
   if (identityNodes.length>=2) {
+    // Per-identity overlap: each identity's STRONGEST overlap with any other,
+    // averaged (importance-weighted). This mirrors how mobile asks "how much does
+    // THIS identity overlap with your others" and fixes the old all-pairs average,
+    // which diluted toward zero the moment you had many identities (so heavily
+    // overlapping maps still scored in the 90s).
     let wSum=0,wTotal=0;
-    for (let i=0;i<identityNodes.length;i++) for (let j=i+1;j<identityNodes.length;j++) {
-      const d=Math.hypot(identityNodes[i].x-identityNodes[j].x,identityNodes[i].y-identityNodes[j].y), sr=identityNodes[i].r+identityNodes[j].r;
-      const avgImp=(IMP_WEIGHTS[identityImportance[identityNodes[i].label]||'medium']+IMP_WEIGHTS[identityImportance[identityNodes[j].label]||'medium'])/2;
-      wSum+=Math.max(0,1-d/sr)*avgImp; wTotal+=avgImp;
+    for (let i=0;i<identityNodes.length;i++) {
+      let best=0;
+      for (let j=0;j<identityNodes.length;j++) {
+        if (i===j) continue;
+        const d=Math.hypot(identityNodes[i].x-identityNodes[j].x,identityNodes[i].y-identityNodes[j].y), sr=identityNodes[i].r+identityNodes[j].r;
+        best=Math.max(best, Math.max(0,1-d/sr));
+      }
+      const imp=IMP_WEIGHTS[identityImportance[identityNodes[i].label]||'medium'];
+      wSum+=best*imp; wTotal+=imp;
     }
     rawOverlap=wTotal>0?Math.round(wSum/wTotal*100):0;
   }
@@ -862,7 +877,7 @@ function updateMeters() {
   platformNodes.forEach(pn=>{ const conn=platformConnections[pn.id]||{targets:[],strength:'moderate',markedNone:false}; if(conn.markedNone||conn.targets.length===0)return; const bonus=strengthBonus[conn.strength]||12; conn.targets.forEach(t=>{tally[t]=(tally[t]||0)+1;total++;feedBonus+=bonus/conn.targets.length;}); });
   feedBonus=Math.min(40,Math.round(feedBonus)); feedConcPct=feedBonus; overlapPct=Math.min(100,rawOverlap+feedBonus);
   const of=document.getElementById('id-overlap-fill'); of.style.width=overlapPct+'%'; of.style.background=overlapPct>60?'#c2410c':overlapPct>30?'#b45309':'#15803d';
-  document.getElementById('id-overlap-lbl').textContent=feedBonus>0?`${rawOverlap}% physical + ${feedBonus}% feed = ${overlapPct}%`:`${overlapPct}% — ${overlapPct>60?'tightly clustered':overlapPct>30?'moderate overlap':'distinct'}`;
+  document.getElementById('id-overlap-lbl').textContent=feedBonus>0?`${rawOverlap}% physical + ${feedBonus}% feed = ${overlapPct}%`:`${overlapPct}% · ${overlapPct>60?'tightly clustered':overlapPct>30?'moderate overlap':'distinct'}`;
   const ff=document.getElementById('feed-conc-fill'); ff.style.width=feedBonus+'%'; ff.style.background=feedBonus>25?'#c2410c':feedBonus>12?'#b45309':'#15803d';
   document.getElementById('feed-conc-lbl').textContent=total>0?`+${feedBonus}pts · "${Object.entries(tally).sort((a,b)=>b[1]-a[1])[0][0]}" most amplified`:(platformNodes.length>0?'Feeds marked diverse':'Connect platforms to see impact');
 }
@@ -893,7 +908,8 @@ function moveDrag(x,y,canvas) {
 }
 
 // Returns { count, bonus } where count is the number of distinct identity clusters
-// and bonus is the cluster diversity bonus (+5 per cluster beyond the first, capped at +25).
+// and bonus is the cluster diversity bonus (+4 per cluster beyond the first, capped
+// at +12, so distinct clusters can't single-handedly inflate the score).
 // Desktop: two identities are in the same cluster when their circles overlap by >15%.
 // Mobile: 'medium'/'high' identities group into one cluster; each 'low' is its own cluster.
 function computeClusters() {
@@ -912,49 +928,52 @@ function computeClusters() {
     for (let k = 1; k < hi.length; k++) union(hi[0].i, hi[k].i);
   }
   const count = new Set(selectedIdentities.map((_, i) => find(i))).size;
-  const bonus = Math.min(25, (count - 1) * 5);
+  const bonus = Math.min(12, (count - 1) * 4);
   return { count, bonus };
 }
 
-// --- Political entanglement -------------------------------------------------
-// Measures how much the user's political identity overlaps with their
-// NON-political identities. This captures the "political mega-identity" pattern
-// (Mason, 2018): the bias risk isn't which identities clash, it's how far a
-// political lens spreads across the rest of someone's map. Symmetric by design
-// (treats every ideology the same), so it never takes a partisan side.
-// Returns { hasPolitical, pct, level } where pct is 0-100 and level is
-// 'high' | 'moderate' | 'low'. To change which identities count as political,
-// edit the 'Politics' category in IDENTITY_CATS above.
-function computePoliticalEntanglement() {
-  // Detect political identities by the category they came from, not by a fixed
-  // label list, so custom and international political identities (anything added
-  // under the Politics category) are recognized too.
-  const polIdx = [], nonPolIdx = [];
-  selectedIdentities.forEach((id, i) => { (id.cat === 'Politics' ? polIdx : nonPolIdx).push(i); });
-  // Need at least one political AND one non-political identity to measure spread.
-  if (polIdx.length === 0 || nonPolIdx.length === 0) return { hasPolitical: false, pct: 0, level: 'low' };
+// --- Category entanglement --------------------------------------------------
+// Measures how far the identities in a category spread across the user's OTHER
+// identities. The signal that matters is a COUNT: how many of your other
+// identities does this one substantially overlap? Captures the "mega-identity"
+// pattern (Mason, 2018): the risk isn't which identities clash, it's one lens
+// (political, or to a lesser degree worldview) threading through many parts of
+// who you are. Averaging overlap diluted this badly (separate identities dragged
+// it back down), so we count linked identities instead. Symmetric by design:
+// never favors any ideology or faith.
+// Returns { present, count, exact, pct, level }. count = number of other
+// identities this category substantially overlaps; level drives the callout text;
+// pct (0-100) drives the score penalty. LINK and the level thresholds below are
+// the subjective knobs to tune.
+function categoryEntanglement(catName) {
+  const LINK = 0.4; // overlap at/above this counts as "substantially overlapping" (roughly half or more)
+  const inIdx = [], outIdx = [];
+  selectedIdentities.forEach((id, i) => { (id.cat === catName ? inIdx : outIdx).push(i); });
+  if (inIdx.length === 0 || outIdx.length === 0) return { present: false, count: 0, exact: false, pct: 0, level: 'none' };
 
-  let pct;
+  let count, exact;
   if (!isMobile() && identityNodes.length === selectedIdentities.length) {
-    // Desktop: average the geometric overlap between each political circle and
-    // each non-political circle (same overlap formula used for clustering).
-    let sum = 0, cnt = 0;
-    polIdx.forEach(p => nonPolIdx.forEach(q => {
+    // Desktop: count the distinct OTHER identities that substantially overlap any
+    // identity in this category.
+    exact = true;
+    const touched = new Set();
+    inIdx.forEach(p => outIdx.forEach(q => {
       const a = identityNodes[p], b = identityNodes[q];
-      sum += Math.max(0, 1 - Math.hypot(a.x - b.x, a.y - b.y) / (a.r + b.r));
-      cnt++;
+      const ov = Math.max(0, 1 - Math.hypot(a.x - b.x, a.y - b.y) / (a.r + b.r));
+      if (ov >= LINK) touched.add(q);
     }));
-    pct = cnt ? Math.round((sum / cnt) * 100) : 0;
+    count = touched.size;
   } else {
-    // Mobile: no pairwise data exists, so use the political identity's own
-    // self-reported overlap level as a proxy (low=0, medium=35, high=70).
-    const vals = { low: 0, medium: 35, high: 70 };
-    let sum = 0;
-    polIdx.forEach(p => { sum += vals[mobileOverlap[selectedIdentities[p].label] || 'medium'] ?? 35; });
-    pct = Math.round(sum / polIdx.length);
+    // Mobile: no pairwise data. Estimate from the category identity's own
+    // self-reported overlap (high spreads widely, medium moderately, low none).
+    exact = false;
+    const lv = inIdx.map(p => mobileOverlap[selectedIdentities[p].label] || 'medium');
+    const best = lv.includes('high') ? 'high' : lv.includes('medium') ? 'medium' : 'low';
+    count = best === 'high' ? Math.min(outIdx.length, 5) : best === 'medium' ? Math.min(outIdx.length, 2) : 0;
   }
-  const level = pct >= 50 ? 'high' : pct >= 25 ? 'moderate' : 'low';
-  return { hasPolitical: true, pct, level };
+  const level = count >= 3 ? 'high' : count === 2 ? 'moderate' : count === 1 ? 'low' : 'none';
+  const pct = Math.round(Math.min(1, count / 5) * 100); // 5+ linked identities = full penalty
+  return { present: true, count, exact, pct, level };
 }
 
 // Computes the complexity score from current overlap, feed amplification, and the
@@ -964,14 +983,26 @@ function computePoliticalEntanglement() {
 // FEED_WEIGHT is applied here directly. Adjust FEED_WEIGHT (0–1) to rebalance (2).
 function computeScore() {
   const FEED_WEIGHT = 0.5;
+  // Entanglement penalties: a political (or worldview) identity that overlaps
+  // with many other identities is its own distinct vulnerability, so it pulls the
+  // score down even when the rest of the map looks varied. Politics is weighted
+  // heaviest (strongest "mega-identity" evidence); religion/worldview lighter,
+  // since for many people it's a bounded community identity rather than a master
+  // lens. Tune POL_WEIGHT / REL_WEIGHT to rebalance.
+  const POL_WEIGHT = 0.20;  // up to ~20-pt penalty at full political entanglement
+  const REL_WEIGHT = 0.12;  // up to ~12-pt penalty at full worldview entanglement
   const { bonus: clusterBonus } = computeClusters();
   const idComplexity = 100 - overlapPct, feedPenalty = feedConcPct * FEED_WEIGHT;
-  const score = Math.min(100, Math.max(0, Math.round(idComplexity - feedPenalty + clusterBonus)));
+  const pol = categoryEntanglement('Politics');
+  const rel = categoryEntanglement('Religion & Worldview');
+  const polPenalty = pol.present ? pol.pct * POL_WEIGHT : 0;
+  const relPenalty = rel.present ? rel.pct * REL_WEIGHT : 0;
+  const score = Math.min(100, Math.max(0, Math.round(idComplexity - feedPenalty + clusterBonus - polPenalty - relPenalty)));
   let level, color, desc;
-  if(score>=75){level='Very Complex';color='#15803d';desc='Your identities span diverse communities, and your feeds don\'t heavily amplify any single one. This gives you more natural resistance to targeted misinformation — it\'s harder to have your full identity profile exploited when your communities are genuinely distinct.';}
+  if(score>=75){level='Very Complex';color='#15803d';desc='Your identities span diverse communities, and your feeds don\'t heavily amplify any single one. This gives you more natural resistance to targeted misinformation, it\'s harder to have your full identity profile exploited when your communities are genuinely distinct.';}
   else if(score>=50){level='Mostly Complex';color='#2563eb';desc='You have a reasonable mix of identities, though some still overlap. Certain misinformation may find more traction depending on which identity your feeds emphasize most. Some built-in resistance exists, but staying aware of your feed patterns matters.';}
-  else if(score>=30){level='Partially Complex';color='#b45309';desc='Many of your identities overlap, and your feeds may emphasize certain ones more than others. You may be more vulnerable to misinformation that targets those emphasized identities — particularly content that feels personally relevant or confirms what you already believe.';}
-  else{level='Less Complex';color='#c2410c';desc='Your identities cluster tightly together, and your feeds reinforce the same groups. This makes you more likely to encounter misinformation that feels validated from multiple directions at once — content designed to resonate with people whose identities look a lot like yours.';}
+  else if(score>=30){level='Partially Complex';color='#b45309';desc='Many of your identities overlap, and your feeds may emphasize certain ones more than others. You may be more vulnerable to misinformation that targets those emphasized identities, particularly content that feels personally relevant or confirms what you already believe.';}
+  else{level='Less Complex';color='#c2410c';desc='Your identities cluster tightly together, and your feeds reinforce the same groups. This makes you more likely to encounter misinformation that feels validated from multiple directions at once, content designed to resonate with people whose identities look a lot like yours.';}
   return { score, level, color, desc };
 }
 
@@ -981,23 +1012,30 @@ function buildReflect() {
   const { score, level, color, desc } = computeScore();
   const clusterNote = clusterCount === 1
     ? 'All your identities form one cluster. More distinct, separate clusters would raise your score.'
-    : `You have <strong style="color:var(--ink)">${clusterCount} distinct identity clusters</strong> — that's a key part of what's driving your score, earning a <strong style="color:var(--ink)">+${clusterBonus}-pt cluster bonus</strong>.`;
-  // Political entanglement callout: surfaces how far a political lens spreads
-  // across the rest of the map. Reflection only, it does not change the score.
-  const pol = computePoliticalEntanglement();
+    : `You have <strong style="color:var(--ink)">${clusterCount} distinct identity clusters</strong>, separate groups of identities that don't overlap much with each other. That variety adds <strong style="color:var(--ink)">${clusterBonus} points</strong> to your score.`;
+  // Entanglement callouts: how far a political / worldview lens spreads across
+  // the rest of the map. These also factor into the score (see computeScore).
+  const pol = categoryEntanglement('Politics');
+  const rel = categoryEntanglement('Religion & Worldview');
+  const entBox = (label, accent, note, strong) => `<div style="padding:13px 16px;border:1px solid ${strong?accent:'var(--rule)'};border-left:4px solid ${accent};border-radius:8px;background:${strong?accent+'12':'var(--paper)'};margin:0 0 12px;font-size:13px;color:var(--ink-mid);line-height:1.7;"><div style="font-size:10px;font-weight:700;letter-spacing:0.13em;text-transform:uppercase;color:${strong?accent:'var(--ink-light)'};margin-bottom:6px;">${label}</div>${note}</div>`;
+  const howMany = (e) => e.exact ? `${e.count} of your other identities` : (e.level==='high' ? 'most of your other identities' : 'a few of your other identities');
   let polBox = '';
-  if (pol.hasPolitical) {
+  if (pol.present) {
     let polNote;
-    if (pol.level === 'high') {
-      polNote = 'Your political identity overlaps heavily with most of your other identities. Political identity is one of the strongest filters for how we process information, so when it colors many other parts of life at once, it can quietly shape what feels true across the board, making it harder to weigh claims on their own merits.';
-    } else if (pol.level === 'moderate') {
-      polNote = "Your political identity overlaps with some of your other identities. Political identity tends to be a powerful filter for how we process information, so it's worth noticing where it's bleeding into other parts of your life, and whether that's shaping what you accept or reject.";
-    } else {
-      polNote = "Your political identity sits relatively apart from your other identities. That can be protective: when politics isn't coloring everything else, you're more able to weigh information outside a single partisan lens.";
-    }
-    polBox = `<div style="padding:12px 16px;border:1px solid var(--rule);border-left:3px solid #c2410c;border-radius:8px;background:var(--paper);margin:0 0 12px;font-size:13px;color:var(--ink-mid);line-height:1.7;"><div style="font-size:10px;font-weight:600;letter-spacing:0.13em;text-transform:uppercase;color:var(--ink-light);margin-bottom:6px;">Political identity</div>${polNote}</div>`;
+    if (pol.level === 'high') polNote = `<strong style="color:var(--ink)">Your political identity overlaps substantially with ${howMany(pol)}.</strong> That is a strong worldview-bias signal. When one political lens threads through that much of who you are, it quietly shapes what feels true across the board and makes it much harder to weigh information that cuts against your side on its own merits.`;
+    else if (pol.level === 'moderate') polNote = `Your political identity overlaps with ${howMany(pol)}. Worth watching whether a partisan lens is starting to color how you read information in those areas.`;
+    else if (pol.level === 'low') polNote = `Your political identity overlaps with one of your other identities. Mild for now, but worth noticing if it starts to spread.`;
+    else polNote = `Your political identity sits relatively apart from your other identities. That can be protective: when politics isn't coloring everything else, you're more able to weigh information outside a single partisan lens.`;
+    polBox = entBox('Political identity', '#c2410c', polNote, pol.level === 'high');
   }
-  document.getElementById('reflect-score').innerHTML=`<div class="score-card"><div class="score-big" style="color:${color}">${score}</div><div><div class="score-meta-lbl">Complexity Score</div><div class="score-level" style="color:${color}">${level}</div><div class="score-desc">${desc}</div></div></div><div style="padding:12px 16px;border:1px solid var(--rule);border-radius:8px;background:var(--paper);margin:0 0 12px;font-size:13px;color:var(--ink-mid);line-height:1.7;">${clusterNote}</div>${polBox}<p style="font-size:12px;color:var(--ink-light);font-style:italic;margin-bottom:20px;line-height:1.6;">This score reflects identity overlap, cluster diversity, and feed amplification — not a diagnostic.</p>`;
+  let relBox = '';
+  if (rel.present && (rel.level === 'high' || rel.level === 'moderate')) {
+    const relNote = rel.level === 'high'
+      ? `<strong style="color:var(--ink)">Your religious or worldview identity overlaps with ${howMany(rel)}.</strong> A worldview can act as a second master lens when it threads through this much of your life, shaping how you read information well beyond matters of faith. Religious community can also be a real source of support, so weigh this in that light.`
+      : `Your religious or worldview identity overlaps with ${howMany(rel)}. Worth a glance at whether it's shaping how you read information beyond matters of faith.`;
+    relBox = entBox('Religion & worldview', '#0369a1', relNote, rel.level === 'high');
+  }
+  document.getElementById('reflect-score').innerHTML=`<div class="score-card"><div class="score-big" style="color:${color}">${score}</div><div><div class="score-meta-lbl">Complexity Score</div><div class="score-level" style="color:${color}">${level}</div><div class="score-desc">${desc}</div></div></div>${polBox}${relBox}<div style="padding:12px 16px;border:1px solid var(--rule);border-radius:8px;background:var(--paper);margin:0 0 12px;font-size:13px;color:var(--ink-mid);line-height:1.7;">${clusterNote}</div><p style="font-size:12px;color:var(--ink-light);font-style:italic;margin-bottom:20px;line-height:1.6;">This score reflects identity overlap, cluster diversity, feed amplification, and how far your political and worldview identities spread. It is not a diagnostic.</p>`;
   const tally={};let totalArrows=0;
   platformNodes.forEach(pn=>{ const conn=platformConnections[pn.id]||{targets:[],strength:'moderate',markedNone:false}; if(conn.markedNone)return; conn.targets.forEach(t=>{tally[t]=(tally[t]||0)+1;totalArrows++;}); });
   let ampHtml='<div class="amp-label">How Your Feeds Amplify Your Identities</div>';
@@ -1005,14 +1043,14 @@ function buildReflect() {
   else {
     platformNodes.forEach(pn=>{ const c=platformConnections[pn.id]||{targets:[],strength:'moderate',markedNone:false}; const targets=c.markedNone?'<em style="color:#15803d">diverse</em>':c.targets.length?c.targets.join(', '):'<em style="color:var(--ink-light)">not configured</em>'; ampHtml+=`<div class="amp-row"><span class="amp-platform">${pn.icon} ${pn.name.split('/')[0].trim()}</span><span class="amp-arrow">→</span><span class="amp-targets">${targets}${c.markedNone?'':'<span class="amp-strength">'+c.strength+'</span>'}</span></div>`; });
     const top=Object.entries(tally).sort((a,b)=>b[1]-a[1])[0];
-    ampHtml+=`<div class="top-amplified"><strong style="color:var(--ink)">"${top[0]}"</strong> is your most-amplified identity — reinforced by ${top[1]} of your ${platformNodes.length} feed${platformNodes.length>1?'s':''}.</div>`;
+    ampHtml+=`<div class="top-amplified"><strong style="color:var(--ink)">"${top[0]}"</strong> is your most-amplified identity, reinforced by ${top[1]} of your ${platformNodes.length} feed${platformNodes.length>1?'s':''}.</div>`;
   }
   document.getElementById('amplifier-callout').innerHTML=ampHtml;
   const topId=Object.entries(tally).sort((a,b)=>b[1]-a[1])[0]?.[0]||'your main identity';
   const qs=[
-    {q:`Your feeds most heavily amplify "${topId}." When you see content that supports this identity, does it just feel right in a way that content challenging it doesn't? What might you be letting through unchecked — and why might you believe one argument over another?`,ph:'Think about how you react differently to content that confirms vs. challenges this identity...'},
-    {q:'Look at two identities on your map that sometimes clash. When your feed forces you to choose between them, which one usually wins — and what happens to the other part of you?',ph:'e.g. My identity as a parent and my political identity sometimes clash when I see certain posts...'},
-    {q:'Is there an identity on your map you could engage with more — online or offline — that might give you a genuinely different perspective? Or is there a community or group you\'ve never really identified with that might be worth exploring? What\'s one concrete step you could take this week to expand your map?',ph:'e.g. I could join a local group, follow new accounts, or have a conversation with someone who...'},
+    {q:`Your feeds most heavily amplify "${topId}." When you see content that supports this identity, does it just feel right in a way that content challenging it doesn't? What might you be letting through unchecked, and why might you believe one argument over another?`,ph:'Think about how you react differently to content that confirms vs. challenges this identity...'},
+    {q:'Look at two identities on your map that sometimes clash. When your feed forces you to choose between them, which one usually wins, and what happens to the other part of you?',ph:'e.g. My identity as a parent and my political identity sometimes clash when I see certain posts...'},
+    {q:'Is there an identity on your map you could engage with more, online or offline, that might give you a genuinely different perspective? Or is there a community or group you\'ve never really identified with that might be worth exploring? What\'s one concrete step you could take this week to expand your map?',ph:'e.g. I could join a local group, follow new accounts, or have a conversation with someone who...'},
   ];
   const qContainer=document.getElementById('reflect-qs');
   qContainer.innerHTML='<div class="ws-eyebrow" style="margin-bottom:16px">Reflection Questions</div>';
@@ -1025,7 +1063,7 @@ function shareScore() {
   if (!scoreEl || !levelEl) return;
   const score = scoreEl.textContent;
   const level = levelEl.textContent;
-  const text = `I just mapped my social identity complexity — my score is ${score} (${level}).\n\nHow complex is your identity map? Find out: https://matthewfacciani.github.io/identity-map\n\n#IdentityMap #Misguided`;
+  const text = `I just mapped my social identity complexity, my score is ${score} (${level}).\n\nHow complex is your identity map? Find out: https://matthewfacciani.github.io/identity-map\n\n#IdentityMap #Misguided`;
   navigator.clipboard.writeText(text).then(() => {
     const btn = document.querySelector('.btn-share');
     const orig = btn.textContent;
@@ -1044,7 +1082,7 @@ function shareScore() {
 function exportReflections() {
   const textareas = document.querySelectorAll('#reflect-qs .rq-input');
   const questions = document.querySelectorAll('#reflect-qs .rq-q');
-  let output = 'IDENTITY MAP — MY REFLECTIONS\n';
+  let output = 'IDENTITY MAP: MY REFLECTIONS\n';
   output += '================================\n\n';
   const scoreEl = document.querySelector('.score-big');
   const levelEl = document.querySelector('.score-level');
