@@ -16,20 +16,6 @@
   --ink-light: #a8a29e;
   --rule: #e7e2db;
   --platform-color: #334155;
-  --paper-elem: white; /* backgrounds that were hardcoded white */
-  transition: background 0.2s, color 0.2s;
-}
-html.dark {
-  --bg: #1a1917;
-  --paper: #242220;
-  --ink: #f0ece3;
-  --ink-mid: #c0b9b0;
-  --ink-light: #78726c;
-  --rule: #3a3532;
-  --platform-color: #94a3b8;
-  --paper-elem: #2e2c29;
-}
-html { transition: background 0.25s, color 0.25s; }
 }
 body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; }
 .wrap { max-width: 720px; margin: 0 auto; padding: 44px 28px 72px; }
@@ -96,8 +82,6 @@ body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg);
 .btn-dark { background: var(--ink); color: var(--bg); }
 .btn-dark:hover { background: #2c2825; }
 .btn-dark:disabled { background: var(--rule); color: var(--ink-light); cursor: not-allowed; }
-.theme-toggle { position: fixed; top: 14px; right: 16px; z-index: 200; background: var(--paper); border: 1.5px solid var(--rule); border-radius: 50%; width: 36px; height: 36px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 6px rgba(0,0,0,0.12); transition: background 0.2s, border-color 0.2s; padding: 0; }
-.theme-toggle:hover { background: var(--rule); }
 .btn-ghost { background: transparent; border: 1.5px solid var(--rule); color: var(--ink-mid); }
 .btn-ghost:hover { border-color: var(--ink-mid); color: var(--ink); }
 .btn-row { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
@@ -107,14 +91,14 @@ body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg);
 .importance-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 .importance-label { font-size: 14px; font-weight: 500; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .importance-btns { display: flex; gap: 6px; flex-shrink: 0; }
-.imp-btn { width: 42px; height: 34px; border-radius: 6px; border: 1.5px solid var(--rule); background: var(--paper-elem); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+.imp-btn { width: 42px; height: 34px; border-radius: 6px; border: 1.5px solid var(--rule); background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
 .imp-btn.sel { color: white; border-color: transparent; }
 .imp-btn .circle-s { width: 10px; height: 10px; border-radius: 50%; background: currentColor; display: block; }
 .imp-btn .circle-m { width: 16px; height: 16px; border-radius: 50%; background: currentColor; display: block; }
 .imp-btn .circle-l { width: 22px; height: 22px; border-radius: 50%; background: currentColor; display: block; }
 .platform-card { border: 1.5px solid var(--rule); border-radius: 10px; background: var(--paper); margin-bottom: 14px; overflow: hidden; transition: border-color 0.2s; }
 .platform-card.complete { border-color: var(--platform-color); }
-.pc-header { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--paper-elem); cursor: pointer; user-select: none; }
+.pc-header { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: white; cursor: pointer; user-select: none; }
 .pc-icon { font-size: 18px; width: 28px; text-align: center; }
 .pc-name { font-size: 15px; font-weight: 600; flex: 1; }
 .pc-status { font-size: 12px; color: var(--ink-light); font-style: italic; }
@@ -124,13 +108,13 @@ body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg);
 .pc-q { font-size: 13px; color: var(--ink-mid); margin: 12px 0 10px; line-height: 1.6; }
 .pc-q strong { color: var(--ink); }
 .id-toggle-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
-.id-toggle { padding: 6px 13px; border-radius: 100px; border: 1.5px solid var(--rule); background: var(--paper-elem); font-size: 12px; color: var(--ink-mid); cursor: pointer; transition: all 0.18s; }
+.id-toggle { padding: 6px 13px; border-radius: 100px; border: 1.5px solid var(--rule); background: white; font-size: 12px; color: var(--ink-mid); cursor: pointer; transition: all 0.18s; }
 .id-toggle:hover { border-color: var(--ink-mid); }
 .id-toggle.sel { color: white; border-color: transparent; }
 .strength-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .strength-lbl { font-size: 12px; color: var(--ink-light); white-space: nowrap; }
 .strength-options { display: flex; gap: 6px; }
-.strength-btn { padding: 5px 12px; border-radius: 100px; border: 1.5px solid var(--rule); background: var(--paper-elem); font-size: 12px; color: var(--ink-mid); cursor: pointer; transition: all 0.15s; }
+.strength-btn { padding: 5px 12px; border-radius: 100px; border: 1.5px solid var(--rule); background: white; font-size: 12px; color: var(--ink-mid); cursor: pointer; transition: all 0.15s; }
 .strength-btn:hover { border-color: var(--ink-mid); }
 .strength-btn.sel { background: var(--ink); color: white; border-color: var(--ink); }
 .canvas-wrap { position: relative; border: 1.5px solid var(--rule); border-radius: 12px; background: var(--paper); overflow: hidden; margin-bottom: 14px; }
@@ -196,7 +180,6 @@ canvas#mapCanvas { display: block; width: 100%; }
 </style>
 </head>
 <body>
-<button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
 <div class="wrap">
 
 <div class="ws-eyebrow">Interactive Worksheet</div>
@@ -766,9 +749,6 @@ function buildMapLegend() {
 function drawFrame(canvas) {
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, canvasW, canvasH);
-  // fill canvas background to match the current theme (avoids transparent gaps)
-  ctx.fillStyle = document.documentElement.classList.contains('dark') ? '#242220' : '#fffdf9';
-  ctx.fillRect(0, 0, canvasW, canvasH);
   paintMap(ctx, identityNodes, platformNodes);
   updateMeters();
 }
@@ -1174,21 +1154,6 @@ function restart() {
 document.getElementById('to-p2').addEventListener('click',()=>goTo(2));
 document.getElementById('to-p4').addEventListener('click',()=>goTo(4));
 buildPanel1();
-// Theme toggle
-(function() {
-  const root = document.documentElement;
-  const btn = document.getElementById('themeToggle');
-  function applyTheme(dark) {
-    root.classList.toggle('dark', dark);
-    btn.textContent = dark ? '☀️' : '🌙';
-    try { localStorage.setItem('imTheme', dark ? 'dark' : 'light'); } catch(e){}
-  }
-  let stored;
-  try { stored = localStorage.getItem('imTheme'); } catch(e){}
-  const prefersDark = stored ? stored === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
-  applyTheme(prefersDark);
-  btn.addEventListener('click', () => applyTheme(!root.classList.contains('dark')));
-})();
 </script>
 </body>
 </html>
